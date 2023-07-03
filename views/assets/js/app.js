@@ -310,6 +310,8 @@ async function connectMQTT() {
             topics:ntopics,
             connection:connection
         };
+        $('#exportTxt').val(JSON.stringify(shareable));
+        $('#exportSettings').modal('show')
         console.log(shareable);
     })
 
@@ -317,6 +319,31 @@ async function connectMQTT() {
 }
 
 $(document).ready(async function() {
+    const getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+    
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+    
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+    if(getUrlParameter('middleware') !== 'cloud') {
+        setInterval(function() {
+            console.log(front.socket.connected);
+
+            if(!front.socket.connected) {
+              location.href='?middleware=cloud';
+            }
+        },2000);    
+    }
 
     $('#btnAddTopic').on('click',function(e) {
         $('#btnAddTopic').attr('disabled','disabled');
@@ -410,6 +437,18 @@ $(document).ready(async function() {
     $("#btnAddMqttDatapoint").on('click',function() {
         populateConnectionList();
         $('#mqttTopics').modal('show');
+    });
+
+    $('#btnApplyImport').on('click',function() {
+        let importJSON = JSON.parse($('#txtImport').val());
+        let connection = importJSON.connection;
+        let topics = importJSON.topics;
+
+        window.localStorage.setItem("connection_"+connection.connectionId,JSON.stringify(connection));
+        window.localStorage.setItem("topics_"+connection.connectionId,JSON.stringify(topics));
+        
+        location.reload();
+
     });
     connectMQTT();
     
