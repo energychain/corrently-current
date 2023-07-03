@@ -1,0 +1,22 @@
+a[aria-expanded=true] .bi-arrow-bar-down {
+  display: none;
+}
+
+a[aria-expanded=false] .bi-arrow-bar-up {
+  display: none;
+}
+
+body.dragging, body.dragging * {
+  cursor: grabbing !important;
+}
+
+.dragged {
+  position: absolute !important;
+  opacity: 0.6;
+  z-index: 2000;
+}
+
+.handle {
+  cursor: grab;
+}
+

@@ -1,0 +1,31 @@
+{
+    "version": "0.0.34",
+    "name": "corrently-current",
+    "app-name": "corrently-current",
+    "package-name": "webview",
+    "project-type": "webview",
+    "icon": "./assets/icon/icon.png",
+    "dist-path": "./dist",
+    "permission": [
+        "android.permission.INTERNET",
+        "android.permission.MANAGE_EXTERNAL_STORAGE"
+    ],
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start:dev": "node .",
+        "build": "androidjs build"
+    },
+    "author": "",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "androidjs": "^2.0.2",
+        "axios": "^1.4.0",
+        "Buffer": "^0.0.0",
+        "mqtt": "^4.3.7"
+    },
+    "project-name": "corrently-current",
+    "theme": {
+        "fullScreen": true
+    }
+}
