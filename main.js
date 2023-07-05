@@ -18,6 +18,17 @@ const _randomString = function() {
 let mqttsessions = {};
 let uuids = {};
 
+/** Handling Edge Connectivity */
+back.on("/corrently/mqtt/bridge",function(msg) {
+    try {
+        const mqttclient = mqtt.connect("mqtt://localhost:1883");
+        mqttclient.on('connect', () => {
+            mqttclient.publish('corrently/mqtt/connect', msg);
+        });
+    } catch(e) {
+        console.error('/corrently/mqtt/bridge',e);
+    }
+});
 
 back.on("/corrently/mqtt/connect",function(msg) {
    try {

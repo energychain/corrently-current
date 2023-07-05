@@ -31,6 +31,9 @@ const getUrlParameter = function getUrlParameter(sParam) {
     if(getUrlParameter('middleware') == 'cloud') {
         socketUrl = 'https://middleware.mqtt.corrently.cloud';
     }
+    if(getUrlParameter('middleware') == 'edge') {
+        socketUrl = 'http://' + location.hostname +':3000';
+    }
     
     let socket = io(socketUrl);
    
