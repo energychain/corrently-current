@@ -38,9 +38,9 @@
         </div>
     </nav>
     <div class="container border rounded shadow" style="margin-top: 150px;background: var(--bs-body-bg);">
-        <h1 class="text-secondary">Current<button class="btn btn-primary btn-sm float-end" id="btnShareCurrent" type="button" style="margin-top: 8px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-share">
+        <h1 class="text-secondary">Current<button class="btn btn-secondary btn-sm float-end" id="btnShareCurrent" type="button" style="margin-top: 8px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-share">
                     <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>
-                </svg></button></h1>
+                </svg>&nbsp;Share / Export</button></h1>
         <div class="row" id="dataWidgets"></div>
         <div class="text-center" style="padding: 15px;">
             <div id="overviewTable"></div>
@@ -55,7 +55,7 @@
                         </svg>&nbsp;Datapoint&nbsp;&nbsp;</button></div>
                 <div class="col-4"><button class="btn btn-secondary w-100" id="btnAddSharedSettings" type="button" data-bs-toggle="modal" data-bs-target="#importSettings"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-share">
                             <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>
-                        </svg>&nbsp;Import Shared&nbsp;&nbsp;</button></div>
+                        </svg>&nbsp;Import&nbsp;</button></div>
             </div>
         </div>
     </div>
@@ -145,9 +145,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Export / Share</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body"><textarea id="exportTxt" class="w-100" style="min-height:300px;"></textarea>
-                    <p><strong>Caution</strong>: Contains security credentials!</p>
-                </div>
+                <div class="modal-body"><textarea id="exportTxt" class="w-100" style="min-height:300px;"></textarea></div>
+                <p class="text-center"><strong>Caution</strong>: Contains security credentials!</p>
+                <div class="modal-footer"><button class="btn btn-secondary" id="btnDownloadSettings" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-download">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"></path>
+                        </svg>&nbsp;Download JSON</button></div>
             </div>
         </div>
     </div>
@@ -169,12 +172,17 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="importSettings">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Import</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body"><textarea id="txtImport" class="w-100"></textarea></div>
+                <div class="modal-body">
+                    <div class="input-group" style="margin-bottom: 25px;"><span class="input-group-text">From file</span><input class="form-control" type="file" id="settingsUploadFile" accept=".corrently-current.json"><button class="btn btn-secondary" id="btnUploadExport" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-upload">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
+                                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"></path>
+                            </svg>&nbsp;Upload&nbsp;</button></div><textarea id="txtImport" class="w-100"></textarea>
+                </div>
                 <div class="modal-footer"><button class="btn btn-secondary" id="btnApplyImport" type="button">Apply</button></div>
             </div>
         </div>
@@ -186,7 +194,7 @@
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=7e09a350584936670bab633993c7953a"></script>
     <script src="assets/js/class_mqttsource.js?h=3b6234665c4db9f1cae2bfed0db7f451"></script>
-    <script src="assets/js/app.js?h=c36257aec9b8fee0fe3af18030a6faf5"></script>
+    <script src="assets/js/app.js?h=7f0999dcfc19e46da84ef2f924bca3fa"></script>
 </body>
 
 </html>

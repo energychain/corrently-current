@@ -335,7 +335,7 @@ $(document).ready(async function() {
 
     let middleware = 'app';
     $('#edgeContainer').hide();
-    
+
     if(getUrlParameter('middleware')) {
 
         middleware = getUrlParameter('middleware');
@@ -361,6 +361,8 @@ $(document).ready(async function() {
             html += '<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2V4zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5z"></path>';
             html += '</svg></span>';
             $('#nodeRedLink').attr('href','http://'+window.location.hostname+':1880/red');
+            // If edge we could add the Edge Connection here ... just to be save...
+            window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Edge","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
             $('#edgeContainer').show();
         } else 
         if(middleware == 'cloud') {
@@ -371,7 +373,32 @@ $(document).ready(async function() {
         $('#connectionState').html(html);
     }
 
-   
+   $('#btnDownloadSettings').on('click',function(e) {
+        const jsonValue = $('#exportTxt').val();
+        let addition = 'settings';
+        
+        const data = "data:text/json;charset=utf-8," + encodeURIComponent(jsonValue);
+        const link = document.createElement("a");
+        link.setAttribute("href", data);
+        link.setAttribute("download", addition+".corrently-current.json");
+        link.click();
+   });
+
+    $('#btnUploadExport').on('click',function(e) {
+        var fileInput = document.getElementById("settingsUploadFile");
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+      
+        reader.onload = function(event) {
+            const fileContent = event.target.result;
+            $('#txtImport').val(fileContent);
+        };
+        try {
+            reader.readAsText(file);
+        } catch(e) {
+            $('#settingsUploadFile')
+        }
+    });
 
     $('#btnAddTopic').on('click',function(e) {
         $('#btnAddTopic').attr('disabled','disabled');
