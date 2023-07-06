@@ -233,12 +233,12 @@ async function connectMQTT() {
                             html += '<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>';
                             html += '</svg>';
                             html += '</button>';
-                            html += '<button type="button" style="margin-right:10px;" class="btn btn-primary shareTopic" id="share_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
+                            html += '<button type="button" style="margin-right:10px;" class="btn btn-secondary shareTopic" id="share_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
                             html += '<svg class="bi bi-share" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
                             html += '<path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>';
                             html += '</svg>';
                             html += '</button>';
-                            html += '<button type="button" class="btn btn-secondary float-end saveTopic" id="save_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
+                            html += '<button type="button" class="btn btn-success float-end saveTopic" id="save_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
                             html += '<svg class="bi bi-save" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
                             html += '<path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"></path>';
                             html += '</svg>';
@@ -309,6 +309,8 @@ async function connectMQTT() {
             connection:connection
         };
         $('#exportTxt').val(JSON.stringify(shareable));
+        $('#exportTxt').show();
+        $('#gtpShareId').hide();
         $('#exportSettings').modal('show')
         console.log(shareable);
     })
@@ -337,41 +339,45 @@ $(document).ready(async function() {
     $('#edgeContainer').hide();
 
     if(getUrlParameter('middleware')) {
-
         middleware = getUrlParameter('middleware');
-
-        if(getUrlParameter('middleware') !== 'cloud') {
-            setInterval(function() {
-                if(!front.socket.connected) {
-                location.href='?middleware=cloud';
-                }
-            },2000);    
-        }
-
-        let html = '';
-        if(middleware == 'app') {
-           html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-phone" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-           html += '<path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"></path>';
-           html += '<path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>';
-           html += '</svg></span>'
-        } else 
-        if(middleware == 'edge') {
-            html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-hdd-network" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">'
-            html += '<path d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM3 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>';
-            html += '<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2V4zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5z"></path>';
-            html += '</svg></span>';
-            $('#nodeRedLink').attr('href','http://'+window.location.hostname+':1880/red');
-            // If edge we could add the Edge Connection here ... just to be save...
-            window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Edge","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
-            $('#edgeContainer').show();
-        } else 
-        if(middleware == 'cloud') {
-            html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-cloud-lightning" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-            html += '<path d="M13.405 4.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 10H13a3 3 0 0 0 .405-5.973zM8.5 1a4 4 0 0 1 3.976 3.555.5.5 0 0 0 .5.445H13a2 2 0 0 1 0 4H3.5a2.5 2.5 0 1 1 .605-4.926.5.5 0 0 0 .596-.329A4.002 4.002 0 0 1 8.5 1zM7.053 11.276A.5.5 0 0 1 7.5 11h1a.5.5 0 0 1 .474.658l-.28.842H9.5a.5.5 0 0 1 .39.812l-2 2.5a.5.5 0 0 1-.875-.433L7.36 14H6.5a.5.5 0 0 1-.447-.724l1-2z"></path>';
-            html += '</svg></span>';
-        }
-        $('#connectionState').html(html);
     }
+
+    if(middleware !== 'cloud') {
+        setInterval(function() {
+            if(!front.socket.connected) {
+            location.href='?middleware=cloud';
+            }
+        },2000);    
+    }
+
+    let html = '';
+    if(middleware == 'app') {
+        html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-phone" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+        html += '<path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"></path>';
+        html += '<path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>';
+        html += '</svg></span>'
+        window.localStorage.removeItem("connection_edge");
+        window.localStorage.removeItem("topics_edge");
+    } else 
+    if(middleware == 'edge') {
+        html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-hdd-network" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">'
+        html += '<path d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM3 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>';
+        html += '<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2V4zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5z"></path>';
+        html += '</svg></span>';
+        $('#nodeRedLink').attr('href','http://'+window.location.hostname+':1880/red');
+        // If edge we could add the Edge Connection here ... just to be save...
+        window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Edge","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
+        $('#edgeContainer').show();
+    } else 
+    if(middleware == 'cloud') {
+        html = '<span id="connectionState" class="badge bg-secondary"><svg class="bi bi-cloud-lightning" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+        html += '<path d="M13.405 4.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 10H13a3 3 0 0 0 .405-5.973zM8.5 1a4 4 0 0 1 3.976 3.555.5.5 0 0 0 .5.445H13a2 2 0 0 1 0 4H3.5a2.5 2.5 0 1 1 .605-4.926.5.5 0 0 0 .596-.329A4.002 4.002 0 0 1 8.5 1zM7.053 11.276A.5.5 0 0 1 7.5 11h1a.5.5 0 0 1 .474.658l-.28.842H9.5a.5.5 0 0 1 .39.812l-2 2.5a.5.5 0 0 1-.875-.433L7.36 14H6.5a.5.5 0 0 1-.447-.724l1-2z"></path>';
+        html += '</svg></span>';
+        window.localStorage.removeItem("connection_edge");
+        window.localStorage.removeItem("topics_edge");
+    }
+    $('#connectionState').html(html);
+
 
    $('#btnDownloadSettings').on('click',function(e) {
         const jsonValue = $('#exportTxt').val();
@@ -382,6 +388,28 @@ $(document).ready(async function() {
         link.setAttribute("href", data);
         link.setAttribute("download", addition+".corrently-current.json");
         link.click();
+   });
+   $('#btnShareSettings').on('click',function(e) {
+        const jsonValue = JSON.stringify($('#exportTxt').val());    
+        $(e.currentTarget).attr('disabled','disabled');
+        $.ajax({
+            type: "POST",
+            url: "https://api.corrently.io/v2.0/tydids/bucket/intercom",
+            data: "&value=" + encodeURIComponent(jsonValue),
+            success: function(data) {
+                $('#exportTxt').hide();
+                $('#gtpShareId').show();
+                $('#shareId').val(data.id);
+
+                $.getJSON("https://api.corrently.io/v2.0/util/qr?data="+data.id,function(d) {
+                    $('#qrImage').attr('src',d);
+                });
+
+                $('#shareId').attr('disabled','disabled');
+                $(e.currentTarget).removeAttr('disabled');
+            }
+        })
+
    });
 
     $('#btnUploadExport').on('click',function(e) {
@@ -454,6 +482,38 @@ $(document).ready(async function() {
             window.localStorage.setItem("topics_"+connectionId,JSON.stringify(topics));
             $('#mqttTopics').modal('hide');
             connectMQTT();
+        });
+    });
+    $('#btnScanQr').on('click',function(e) {
+        $('#qrScanner').modal('show');
+        $('#importSettings').modal('hide');
+        function onScanSuccess(decodedText, decodedResult) {
+            // handle the scanned code as you like, for example:
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            $('#bucketId').val(decodedText);
+            $('#qrScanner').modal('hide');
+            $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
+                $('#txtImport').val(JSON.parse(d.val));
+            });
+            $('#importSettings').modal('show');
+          }
+          
+          function onScanFailure(error) {
+            // handle scan failure, usually better to ignore and keep scanning.
+            // for example:
+            console.warn(`Code scan error = ${error}`);
+          }
+          
+          let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: {width: 250, height: 250} },
+            /* verbose= */ false);
+          html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    })
+    $('#frmShareCode').on('submit',function(e) {
+        e.preventDefault();
+        $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
+            $('#txtImport').val(JSON.parse(d.val));
         });
     });
 
@@ -540,6 +600,8 @@ $(document).ready(async function() {
         }
     
         $('#exportTxt').val(JSON.stringify(nobj));
+        $('#exportTxt').show();
+        $('#gtpShareId').hide();
         $('#exportSettings').modal('show')
     })
     connectMQTT();

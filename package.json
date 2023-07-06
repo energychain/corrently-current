@@ -1,22 +1,23 @@
 {
-    "version": "0.0.37",
+    "version": "0.0.41",
     "name": "corrently-current",
     "app-name": "corrently-current",
     "package-name": "webview",
     "project-type": "webview",
-    "icon": "./assets/icon/icon.png",
+    "icon": "./assets/icon/corrently-current.png",
     "dist-path": "./dist",
     "permission": [
         "android.permission.INTERNET",
-        "android.permission.MANAGE_EXTERNAL_STORAGE"
+        "android.permission.MANAGE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
     ],
-    "description": "",
+    "description": "Corrently Current UI for Cloud/Edge/App",
     "main": "main.js",
     "scripts": {
         "start:dev": "node .",
         "build": "androidjs build"
     },
-    "author": "",
+    "author": "STROMDAO GmbH <dev@stromdao.com>",
     "license": "Apache-2.0",
     "dependencies": {
         "androidjs": "^2.0.2",
