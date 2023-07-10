@@ -30,6 +30,7 @@ back.on("/corrently/mqtt/bridge",function(msg) {
     }
 });
 
+
 back.on("/corrently/mqtt/connect",function(msg) {
    try {
         const _connectionOptions = JSON.parse(msg);
@@ -111,6 +112,10 @@ back.on("/corrently/mqtt/connect",function(msg) {
             }
         });
 
+        mqttclient.on('error',(e) =>{
+            console.log(e.toString());
+            back.send("/corrently/mqtt/error",JSON.stringify({sessionId:sessionId,status:"failed",uiid:_connectionOptions.uiid,error:e.toString()}));
+        });
     } catch(e) {
         back.send("/corrently/error",e);
         back.send("/corrently/console",e);

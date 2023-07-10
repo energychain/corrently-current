@@ -123,6 +123,11 @@ function populateConnectionList(selected_connection) {
             const key_id = key_split[1];
             if(key_type == 'connection') {
                 const settings = JSON.parse(value);
+                if(typeof settings.basePath !== 'undefined') {
+                    $('#nTopic').val(settings.basePath + "#");
+                } else {
+                    // $('#nTopic').val('#');
+                }
                 let selected = '';
                 if(selected_connection == key_id) {
                     selected = "selected";
@@ -153,6 +158,24 @@ function populateConnectionList(selected_connection) {
 async function connectMQTT() {
     let html = '<div class="row">';
 
+    if(!window.localStorage.getItem("connection_cloud")) {
+        const cloudUser = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
+        window.localStorage.setItem("connection_cloud",JSON.stringify({
+            "connectionName":"Corrrently Cloud",
+            "host":"mqtt.corrently.cloud",
+            "port":1883,
+            "protocol":"mqtt",
+            "username":cloudUser.username,
+            "password":cloudUser.password,
+            "protocolId":"MQIsdp",
+            "protocolVersion":3,
+            "connectionId":"cloud",
+            "uiid":"cloud",
+            "basePath":"corrently/users/"+cloudUser.username+"/"
+        }));
+    }
+    $('#availConnections').html("");
+    let availConnections = '<option value="_new">new MQTT Connection</option>';
     for (const [key, value] of Object.entries(window.localStorage)) {
         const key_split = key.split('_');
         let migration=false;
@@ -160,8 +183,11 @@ async function connectMQTT() {
             const key_type = key_split[0];
             const key_id = key_split[1];
             if(key_type == 'connection') {
-                const connection = new MQTTSource(JSON.parse(value));
+                const connectionSettings = JSON.parse(value);
+                const connection = new MQTTSource(connectionSettings);
                 await connection.connect();
+                availConnections += '<option value="'+key_id+'">'+connectionSettings.connectionName+'</option>';
+
                 let datapoints = window.localStorage.getItem("topics_"+key_id);
                 if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
                     datapoints = JSON.parse(datapoints);
@@ -264,6 +290,14 @@ async function connectMQTT() {
     }
     html += '</div>'
     $('#overviewTable').html(html);
+    $('#availConnections').html(availConnections);
+    $('#availConnections').off();
+    $('#availConnections').on('change',function(e) {
+        const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+$(e.currentTarget).val()));
+        for (const [key, value] of Object.entries(connectionSettings)) {
+            $('#mqtt_'+key).val(value);
+        }
+    });
     $('.saveTopic').off();
     $('.saveTopic').on('click',function(e) {
         const connectionId = $(e.currentTarget).attr('data-connection');
@@ -335,6 +369,13 @@ $(document).ready(async function() {
         return false;
     };
 
+    if(!window.localStorage.getItem("corrently_cloud_user")) {
+        $.getJSON("https://integration.corrently.io/node-red/createUser",function(d) {
+            window.localStorage.setItem("corrently_cloud_user",JSON.stringify(d));
+            location.reload();
+        });
+    }
+
     let middleware = 'app';
     $('#edgeContainer').hide();
 
@@ -366,7 +407,7 @@ $(document).ready(async function() {
         html += '</svg></span>';
         $('#nodeRedLink').attr('href','http://'+window.location.hostname+':1880/red');
         // If edge we could add the Edge Connection here ... just to be save...
-        window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Edge","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
+        window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Corrently EDGE","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
         $('#edgeContainer').show();
     } else 
     if(middleware == 'cloud') {
@@ -444,7 +485,7 @@ $(document).ready(async function() {
             });
             $('#nTopic').val('');
             $('.noTopic').removeAttr('disabled');
-            $('#btnAddTopic').removeAttr('disabled');
+            $('#btnAddTopic').removeAttr('disabled'); 
         });
         $('#btnAddDatapoint').off();
         $('#btnAddDatapoint').on('click',function(e) {
@@ -516,7 +557,12 @@ $(document).ready(async function() {
             $('#txtImport').val(JSON.parse(d.val));
         });
     });
-
+    $('#removeConnection').off();
+    $('#removeConnection').on('click',function(e) {
+        const selectedConnection =  $('#availConnections').val();
+        window.localStorage.removeItem("connection_"+selectedConnection);
+        location.reload();
+    });
     $("#mqttConnectionSettings").on("submit", function (e) {
         e.preventDefault();
         $('#connectionAlert').hide();
@@ -524,28 +570,56 @@ $(document).ready(async function() {
         $('#btnTestSettings').removeAttr('data-connection');
 
         const form = $(e.target);
-        const settings = convertFormToJSON(form);
+        let settings = convertFormToJSON(form);
         settings.port = settings.port * 1;
+
         if(typeof settings.protocolVersion !== 'undefined') settings.protocolVersion = settings.protocolVersion  * 1;
+        console.log(settings.availConnections);
 
-        const connection = new MQTTSource(settings);
-        connection.connect().then(function(t) {
-            console.log("connected",connection.getConnectionId());
-            $('#btnTestSettings').attr('data-connection',connection.getConnectionId());
-            $('#btnTestSettings').removeAttr('disabled');
-          
+        const selectedConnection =  settings.availConnections;
+        delete settings.availConnections;
+
+        if(selectedConnection !== '_new') {
+            settings.uiid = selectedConnection;
+            settings.connectionId = selectedConnection;
+            window.localStorage.setItem("connection_"+selectedConnection,JSON.stringify(settings));
             $('#mqttConnection').modal('hide');
-            
-            populateConnectionList(connection.getConnectionId());
-
+            populateConnectionList(selectedConnection);
+            if(typeof settings.basePath !== 'undefined') {
+                $('#nTopic').val(settings.basePath + "#");
+            }
             $('#mqttTopics').modal('show');
-            
-        }).catch(function(ex) {
-            console.error(ex);
-            console.log("Error");
-            $('#connectionAlert').show();
-            $('#connectionAlert').html(ex);
-        });
+        } else {
+           
+            const connection = new MQTTSource(settings);
+            connection.connect().then(function(t) {
+                $('#connectionAlert').hide();
+                console.log("connected",connection.getConnectionId());
+                $('#btnTestSettings').attr('data-connection',connection.getConnectionId());
+                $('#btnTestSettings').removeAttr('disabled');
+              
+                $('#mqttConnection').modal('hide');
+               
+                if(typeof settings !== 'object') {
+                    populateConnectionList(connection.getConnectionId());
+                } else {
+                    populateConnectionList(settings);
+                }
+              
+                //populateConnectionList();
+    
+                $('#mqttTopics').modal('show');
+    
+                
+            }).catch(function(ex) {
+                console.error(ex);
+                $('#connectionAlert').show();
+                $('#connectionAlert').html(ex);
+                $('#btnTestSettings').removeAttr('disabled');
+            });
+        }
+        
+
     });
 
     $("#btnAddMqttDatapoint").on('click',function() {
@@ -604,6 +678,13 @@ $(document).ready(async function() {
         $('#gtpShareId').hide();
         $('#exportSettings').modal('show')
     })
+    $('#revealPWD').on('click',function(e) {
+        if($('#mqtt_password').attr('type') == 'password') {
+            $('#mqtt_password').attr('type','text');
+        } else {
+            $('#mqtt_password').attr('type','password');
+        }
+    });
     connectMQTT();
     
 });

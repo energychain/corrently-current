@@ -9,7 +9,7 @@ let sessions = {};
  * @return {string} The randomly generated string.
  */
 const _randomString = function() {
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_';
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	let randomString = '';
 	for (let i = 0; i < 20; i++) {
 	  const randomIndex = Math.floor(Math.random() * chars.length);
@@ -73,6 +73,12 @@ class MQTTSource {
                     resolve(parent.connectSettings.connectionId);
                 }
             });
+
+            front.on("/corrently/mqtt/error",function(msg) {
+                let sessionInfo = JSON.parse(msg);
+                reject(sessionInfo.error);
+            });
+
             front.send("/corrently/mqtt/connect",JSON.stringify(parent.connectSettings));
         });
     }

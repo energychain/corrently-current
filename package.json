@@ -1,5 +1,5 @@
 {
-    "version": "0.0.44",
+    "version": "0.0.45",
     "name": "corrently-current",
     "app-name": "corrently-current",
     "package-name": "webview",
@@ -15,7 +15,7 @@
     "description": "Corrently Current UI for Cloud/Edge/App",
     "main": "main.js",
     "scripts": {
-        "start:dev": "node .",
+        "start": "node .",
         "build": "androidjs build"
     },
     "author": "STROMDAO GmbH <dev@stromdao.com>",
