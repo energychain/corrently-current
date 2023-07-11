@@ -112,7 +112,6 @@ back.on("/corrently/mqtt/connect",function(msg) {
             }
         });
         back.on("/corrently/mqtt/disconnect",function(msg) {
-            console.log("Disconnect with msg",msg);
             if(msg == _connectionOptions.uiid) {
                 mqttclient.end();
             }

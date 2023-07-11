@@ -345,15 +345,30 @@ async function connectMQTT() {
             let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
             let connection = JSON.parse(window.localStorage.getItem("connection_"+connectionId));
             let ntopics = [];
+            let tempConnectionId = connectionId;
+            if((connectionId == "edge") || (connectionId == "cloud")) {
+                tempConnectionId = _randomString();
+                connection.connectionName = "Imported "+connectionId + " "+tempConnectionId;
+            }
+           
+            // do not share "_cloud" or "_edge" IDs.
             for(let i=0;i<topics.length;i++) {
                 if((topics[i].id == $(e.currentTarget).attr('data-topic'))&&(topics[i] !== null)) {
-                ntopics.push(topics[i]);
+                    if((connectionId == "edge") || (connectionId == "cloud")) {
+                        topics[i].id = _randomString();
+                    }   
+                    ntopics.push(topics[i]);
                 }
             }
+            connection.uiid = tempConnectionId;
+            connection.connectionId = tempConnectionId;
+            
             let shareable = {
                 topics:ntopics,
                 connection:connection
             };
+            
+
             $('#exportTxt').val(JSON.stringify(shareable));
             $('#exportTxt').show();
             $('#gtpShareId').hide();
@@ -656,7 +671,7 @@ $(document).ready(async function() {
         let cloud = JSON.parse(window.localStorage.getItem("connection_cloud"));
         $('#bridgeConnection').append('<option value="'+cloud.connectionId+'" selected>'+cloud.connectionName+'</option>');  
         $('#basepath').val(cloud.basePath);
-           
+
         $('#bridgeSettings').modal('show');
     });
 
