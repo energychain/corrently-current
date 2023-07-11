@@ -1,1 +1,20 @@
-{"short_name":"Ecoflow MQTT Credentials","name":"Ecoflow MQTT Credentials","icons":[{"src":"/assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e","type":"image/png","sizes":"192x192"},{"src":"/assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1","type":"image/png","sizes":"512x512"}],"start_url":"index.html","display":"fullscreen"}
+{
+    "short_name": "Corrently Current",
+    "name": "Corrently Current  - PWA",
+    "icons": [
+        {
+            "src": "/assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "index.html",
+    "background_color": "#ffffff",
+    "theme_color": "#00880e",
+    "display": "fullscreen"
+}

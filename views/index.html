@@ -5,15 +5,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Corrently Current</title>
+    <meta name="theme-color" content="#00880e">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:title" content="Corrently Current">
     <meta property="og:image" content="assets/img/corrently-logo.webp?h=1097915e26a69ed47314de449e2aa88a">
     <meta name="description" content="Light EMS to run via Smartphones">
     <meta property="og:type" content="website">
+    <meta property="og:description" content="Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface">
+    <meta name="twitter:image" content="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e">
     <link rel="icon" type="image/png" sizes="512x512" href="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=fe7fdfec700d100dc745dc64d3600cb2">
-    <link rel="manifest" href="manifest.json?h=468807c3f93f7ada82ed13d5335ab4d0">
+    <link rel="manifest" href="manifest.json?h=28b0a1e01fc11297206846c45fc607e3">
     <link rel="stylesheet" href="assets/css/styles.css?h=5ed84bd7390f7014cebb2d3496d846ae">
 </head>
 
@@ -59,6 +64,20 @@
             </div>
         </div>
     </div>
+    <div class="container border rounded shadow" id="ozContainer" style="margin-top:50px;background: var(--bs-body-bg);">
+        <h1 class="text-secondary">Helper</h1>
+        <div class="input-group"><span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-magic">
+                    <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0v1.829Zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707L14 2.707ZM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707L7.293 4Zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1h1.829Zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1h1.829ZM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707L13.293 10ZM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0v1.829Zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0L8.354 9.06Z"></path>
+                </svg></span><select class="form-select" id="jumpWizard">
+                <option value="" selected="">Please select...</option>
+                <optgroup label="Commons">
+                    <option value="https://energychain.github.io/site_ecoflow_mqtt_credentials/gridfrequency.html">Grid Frequency (ENTSOe)</option>
+                </optgroup>
+                <optgroup label="Powerstation">
+                    <option value="https://energychain.github.io/site_ecoflow_mqtt_credentials/current.html">Ecoflow</option>
+                </optgroup>
+            </select></div><small class="form-text">Will redirect to the website of the wizard!</small>
+    </div>
     <div class="container border rounded shadow" id="edgeContainer" style="margin-top:50px;background: var(--bs-body-bg);">
         <h1 class="text-secondary">EDGE</h1>
         <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
@@ -70,9 +89,7 @@
                         <path d="M13.405 4.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 10H13a3 3 0 0 0 .405-5.973zM8.5 1a4 4 0 0 1 3.976 3.555.5.5 0 0 0 .5.445H13a2 2 0 0 1 0 4H3.5a2.5 2.5 0 1 1 .605-4.926.5.5 0 0 0 .596-.329A4.002 4.002 0 0 1 8.5 1zM7.053 11.276A.5.5 0 0 1 7.5 11h1a.5.5 0 0 1 .474.658l-.28.842H9.5a.5.5 0 0 1 .39.812l-2 2.5a.5.5 0 0 1-.875-.433L7.36 14H6.5a.5.5 0 0 1-.447-.724l1-2z"></path>
                     </svg>&nbsp;Cloud Bridge</button></div>
         </div>
-    </div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-share">
-        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>
-    </svg>
+    </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="qrScanner">
         <div class="modal-dialog modal-xl modal-fullscreen-xl-down" role="document">
             <div class="modal-content">
@@ -232,7 +249,7 @@
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=7e09a350584936670bab633993c7953a"></script>
     <script src="assets/js/class_mqttsource.js?h=f94f47b5358416dd2fed128d191feee4"></script>
-    <script src="assets/js/app.js?h=eddf85870e3b723b1b9844a2b1188ce5"></script>
+    <script src="assets/js/app.js?h=a1153c93df3bc2d4225ceae9f7e0ffbc"></script>
     <script src="assets/js/html5qr.js?h=d88d3200cb547c9e86ee972975561dcd"></script>
 </body>
 

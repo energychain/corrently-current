@@ -116,6 +116,7 @@ async function render(connectionId,dataPoint,payload) {
 function populateConnectionList(selected_connection) {
     $('#topicList').html('');
     let html = '';
+    let hasSelected = false;
     for (const [key, value] of Object.entries(window.localStorage)) {
         const key_split = key.split('_');
         if(key_split.length == 2) {
@@ -123,14 +124,15 @@ function populateConnectionList(selected_connection) {
             const key_id = key_split[1];
             if(key_type == 'connection') {
                 const settings = JSON.parse(value);
-                if(typeof settings.basePath !== 'undefined') {
-                    $('#nTopic').val(settings.basePath + "#");
-                } else {
-                    // $('#nTopic').val('#');
-                }
                 let selected = '';
-                if(selected_connection == key_id) {
+                if((selected_connection == key_id)|| ((!hasSelected) && (typeof selected_connection == 'undefined'))) {
                     selected = "selected";
+                    hasSelected = true;
+                    if(typeof settings.basePath !== 'undefined') {
+                        $('#nTopic').val(settings.basePath);
+                    } else {
+                        $('#nTopic').val('#');
+                    }
                 }
                 html += '<option value="'+key_id+'" '+selected+'>'+settings.connectionName+'</option>'; 
             }
@@ -158,8 +160,9 @@ function populateConnectionList(selected_connection) {
 async function connectMQTT() {
     let html = '<div class="row">';
 
-    if(!window.localStorage.getItem("connection_cloud")) {
-        const cloudUser = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
+    const cloudUser = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
+    
+    if(!window.localStorage.getItem("connection_cloud")) {     
         window.localStorage.setItem("connection_cloud",JSON.stringify({
             "connectionName":"Corrrently Cloud",
             "host":"mqtt.corrently.cloud",
@@ -171,185 +174,204 @@ async function connectMQTT() {
             "protocolVersion":3,
             "connectionId":"cloud",
             "uiid":"cloud",
-            "basePath":"corrently/users/"+cloudUser.username+"/"
+            "basePath":"corrently/users/"+cloudUser.username+"/#"
         }));
     }
-    $('#availConnections').html("");
-    let availConnections = '<option value="_new">new MQTT Connection</option>';
-    for (const [key, value] of Object.entries(window.localStorage)) {
-        const key_split = key.split('_');
-        let migration=false;
-        if(key_split.length == 2) {
-            const key_type = key_split[0];
-            const key_id = key_split[1];
-            if(key_type == 'connection') {
-                const connectionSettings = JSON.parse(value);
-                const connection = new MQTTSource(connectionSettings);
-                await connection.connect();
-                availConnections += '<option value="'+key_id+'">'+connectionSettings.connectionName+'</option>';
 
-                let datapoints = window.localStorage.getItem("topics_"+key_id);
-                if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
-                    datapoints = JSON.parse(datapoints);
-                    for(let i=0;i<datapoints.length;i++) {
-                        connection.subscribe(datapoints[i].topic,function(msg) {
-                                render(connection.getConnectionId(),datapoints[i].topic,msg);
-                        });
+    $.getJSON("https://integration.corrently.io/node-red/resumeClient?username="+cloudUser.username, function(data) {
+        console.debug("resume Cloud MQTT",data);
+    });
+    try {
+        $('#availConnections').html("");
+        let availConnections = '<option value="_new">new MQTT Connection</option>';
+        for (const [key, value] of Object.entries(window.localStorage)) {
+            const key_split = key.split('_');
+            let migration=false;
+            if(key_split.length == 2) {
+                const key_type = key_split[0];
+                const key_id = key_split[1];
+                if(key_type == 'connection') {
+                    const connectionSettings = JSON.parse(value);
+                    const connection = new MQTTSource(connectionSettings);
+                    await connection.connect();
+                    availConnections += '<option value="'+key_id+'">'+connectionSettings.connectionName+'</option>';
+
+                    let datapoints = window.localStorage.getItem("topics_"+key_id);
+                    if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
+                        datapoints = JSON.parse(datapoints);
+                        for(let i=0;i<datapoints.length;i++) {
+                            connection.subscribe(datapoints[i].topic,function(msg) {
+                                    render(connection.getConnectionId(),datapoints[i].topic,msg);
+                            });
+                        }
                     }
                 }
-            }
-            if(key_type == 'topics') {
-                let topicSettings = JSON.parse(value);
-                for(let i=0;i<topicSettings.length;i++) {
-                    let connectionSettings = JSON.parse(window.localStorage.getItem('connection_'+key_id));
-                    html += '<div class="col-md-4" title="'+topicSettings[i].topic+'">'
-                    html += '<div class="card" style="margin-bottom:15px"><div class="heijoh">';
-                        html += '<div class="card-body text-center">';
-                               
-                                    html += '<div class="'+key_id+' text-right text-truncate display-4 idle_'+topicSettings[i].id+'" data-colorize="'+topicSettings[i].colorize+'" corrently-maxlength=20 corrently-renderer="'+topicSettings[i].renderer+'" corrently-datapoint="'+topicSettings[i].topic+'">-</div>';
-                                    html += '<div>' + topicSettings[i].alias + '</div>';
+                if(key_type == 'topics') {
+                    let topicSettings = JSON.parse(value);
+                    for(let i=0;i<topicSettings.length;i++) {
+                        let connectionSettings = JSON.parse(window.localStorage.getItem('connection_'+key_id));
+                        html += '<div class="col-md-4" title="'+topicSettings[i].topic+'">'
+                        html += '<div class="card" style="margin-bottom:15px"><div class="heijoh">';
+                            html += '<div class="card-body text-center">';
+                                
+                                        html += '<div class="'+key_id+' text-right text-truncate display-4 idle_'+topicSettings[i].id+'" data-colorize="'+topicSettings[i].colorize+'" corrently-maxlength=20 corrently-renderer="'+topicSettings[i].renderer+'" corrently-datapoint="'+topicSettings[i].topic+'">-</div>';
+                                        html += '<div>' + topicSettings[i].alias + '</div>';
 
-                                html += '<a style="margin-top:-25px;margin-right:-5px" class="btn btn-secondary btn-sm float-end" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#area_'+topicSettings[i].id+'" href="#area_'+topicSettings[i].id+'" role="button">'
-                                // html += '<i style="cursor:pointer" data-toggle="collapse" data-target="#area_'+topicSettings[i].id+'" aria-expanded="true" aria-controls="area_'+topicSettings[i].id+'">';
-                                 html += '<svg class="bi bi-chevron-double-down" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-                                 html += '<path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>';
-                                 html += '<path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>';
-                                 html += '</svg>';
-                                 html += '</a>';
-                               
-                                html += '</div>';
+                                    html += '<a style="margin-top:-25px;margin-right:-5px" class="btn btn-secondary btn-sm float-end" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#area_'+topicSettings[i].id+'" href="#area_'+topicSettings[i].id+'" role="button">'
+                                    // html += '<i style="cursor:pointer" data-toggle="collapse" data-target="#area_'+topicSettings[i].id+'" aria-expanded="true" aria-controls="area_'+topicSettings[i].id+'">';
+                                    html += '<svg class="bi bi-chevron-double-down" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+                                    html += '<path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>';
+                                    html += '<path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>';
+                                    html += '</svg>';
+                                    html += '</a>';
+                                
+                                    html += '</div>';
+                            
+                            html += '</div>';
                         
+                        html += '<div class="collapse" id="area_'+topicSettings[i].id+'">';
+                                html += '<div class="card-body" style="padding-bottom:15px;">';
+                                html += '<div style="margin-top:15px;">';
+                                    html += '<strong>Connection</strong><br/>';
+                                    html += connectionSettings.connectionName;
+                                html += '</div>';
+                                html += '<div style="margin-top:15px;">';
+                                    html += '<strong>MQTT Topic</strong><br/>';
+                                    html += topicSettings[i].topic;
+                                html += '</div>';
+                                html += '<div style="margin-top:15px;">';
+                                    html += '<strong>DataPoint Alias</strong><br/>';
+                                    html += '<div class="input-group">';
+                                    html +=  '<input class="form-control w-100" type="text" id="alias_'+topicSettings[i].id+'" value="'+topicSettings[i].alias+'"/>';
+                                    html += '</div>';
+                                html += '</div>';
+                                html += '<div style="margin-top:15px;">';
+                                    html += '<strong>Value Renderer</strong><br/>';
+                                        html += '<div class="input-group">';
+                                        html +=  '<input class="form-control w-100" type="text" id="renderer_'+topicSettings[i].id+'" value="'+topicSettings[i].renderer+'"/>';
+                                        html += '</div>';
+                                html += '</div>';
+                                html += '<div style="margin-top:15px;">';
+                                    html += '<strong>Colorize Changes</strong><br/>';
+                                    html += '<div class="input-group">';
+                                    html +=     '<select id="colorize_'+topicSettings[i].id+'" class="form-control">';
+                                    html +=         '<option value="1">Organge Up / Green Down</option>';
+                                    html +=         '<option value="-1">Green Up / Orange Down</option>';
+                                    html +=     '</select>';   
+                                    html += '</div>';
+                                html += '</div>';
+                                html += '<div style="margin-top:15px;">';
+                                html += '<button type="button" style="margin-right:10px;" class="btn btn-danger float-start deleteTopic" id="delete_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
+                                html += '<svg class="bi bi-trash" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+                                html += '<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>';
+                                html += '<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>';
+                                html += '</svg>';
+                                html += '</button>';
+                                html += '<button type="button" style="margin-right:10px;" class="btn btn-secondary shareTopic" id="share_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
+                                html += '<svg class="bi bi-share" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+                                html += '<path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>';
+                                html += '</svg>';
+                                html += '</button>';
+                                html += '<button type="button" class="btn btn-success float-end saveTopic" id="save_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
+                                html += '<svg class="bi bi-save" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
+                                html += '<path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"></path>';
+                                html += '</svg>';
+                                html += '</button>';
+                                html += '</div>';
+                        html += '</div>';
+
+                        html += '</div></div>';
                         html += '</div>';
                     
-                      html += '<div class="collapse" id="area_'+topicSettings[i].id+'">';
-                            html += '<div class="card-body" style="padding-bottom:15px;">';
-                            html += '<div style="margin-top:15px;">';
-                                html += '<strong>Connection</strong><br/>';
-                                html += connectionSettings.connectionName;
-                            html += '</div>';
-                            html += '<div style="margin-top:15px;">';
-                                html += '<strong>MQTT Topic</strong><br/>';
-                                html += topicSettings[i].topic;
-                            html += '</div>';
-                            html += '<div style="margin-top:15px;">';
-                                html += '<strong>DataPoint Alias</strong><br/>';
-                                html += '<div class="input-group">';
-                                html +=  '<input class="form-control w-100" type="text" id="alias_'+topicSettings[i].id+'" value="'+topicSettings[i].alias+'"/>';
-                                html += '</div>';
-                            html += '</div>';
-                            html += '<div style="margin-top:15px;">';
-                                html += '<strong>Value Renderer</strong><br/>';
-                                    html += '<div class="input-group">';
-                                    html +=  '<input class="form-control w-100" type="text" id="renderer_'+topicSettings[i].id+'" value="'+topicSettings[i].renderer+'"/>';
-                                    html += '</div>';
-                            html += '</div>';
-                            html += '<div style="margin-top:15px;">';
-                                html += '<strong>Colorize Changes</strong><br/>';
-                                html += '<div class="input-group">';
-                                html +=     '<select id="colorize_'+topicSettings[i].id+'" class="form-control">';
-                                html +=         '<option value="1">Organge Up / Green Down</option>';
-                                html +=         '<option value="-1">Green Up / Orange Down</option>';
-                                html +=     '</select>';   
-                                html += '</div>';
-                             html += '</div>';
-                            html += '<div style="margin-top:15px;">';
-                            html += '<button type="button" style="margin-right:10px;" class="btn btn-danger float-start deleteTopic" id="delete_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
-                            html += '<svg class="bi bi-trash" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-                            html += '<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>';
-                            html += '<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>';
-                            html += '</svg>';
-                            html += '</button>';
-                            html += '<button type="button" style="margin-right:10px;" class="btn btn-secondary shareTopic" id="share_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
-                            html += '<svg class="bi bi-share" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-                            html += '<path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>';
-                            html += '</svg>';
-                            html += '</button>';
-                            html += '<button type="button" class="btn btn-success float-end saveTopic" id="save_'+topicSettings[i].id+'" data-topic="'+topicSettings[i].id+'" data-connection="'+key_id+'">';
-                            html += '<svg class="bi bi-save" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">';
-                            html += '<path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"></path>';
-                            html += '</svg>';
-                            html += '</button>';
-                            html += '</div>';
-                       html += '</div>';
-
-                    html += '</div></div>';
-                    html += '</div>';
-                 
-                    // Migration (Missing Topic ID)
-                    if(typeof topicSettings[i].id == 'undefined') {
-                        topicSettings[i].id = _randomString();
-                        migration=true;
-                        value = JSON.stringify(topicSettings);
+                        // Migration (Missing Topic ID)
+                        if(typeof topicSettings[i].id == 'undefined') {
+                            topicSettings[i].id = _randomString();
+                            migration=true;
+                            value = JSON.stringify(topicSettings);
+                        }
                     }
                 }
             }
+            if(migration) {
+                window.localStorage.setItem(key,JSON.stringify(value));
+            }
         }
-        if(migration) {
-            window.localStorage.setItem(key,JSON.stringify(value));
+        html += '</div>'
+        $('#overviewTable').html(html);
+        $('#availConnections').html(availConnections);
+        $('#availConnections').off();
+        $('#availConnections').on('change',function(e) {
+            const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+$(e.currentTarget).val()));
+            for (const [key, value] of Object.entries(connectionSettings)) {
+                $('#mqtt_'+key).val(value);
+            }
+        });
+        $('.saveTopic').off();
+        $('.saveTopic').on('click',function(e) {
+            const connectionId = $(e.currentTarget).attr('data-connection');
+            let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
+            for(let i=0;i<topics.length;i++) {
+                if(topics[i].id == $(e.currentTarget).attr('data-topic')) {
+                    topics[i].alias = $('#alias_'+$(e.currentTarget).attr('data-topic')).val();
+                    topics[i].renderer = $('#renderer_'+$(e.currentTarget).attr('data-topic')).val();
+                    topics[i].colorize = $('#colorize_'+$(e.currentTarget).attr('data-topic')).val();
+                }
+            }
+            window.localStorage.setItem("topics_"+connectionId,JSON.stringify(topics));
+            $('#overviewTable')
+            connectMQTT();
+        })
+        $('.deleteTopic').off();
+        $('.deleteTopic').on('click',function(e) {
+            const connectionId = $(e.currentTarget).attr('data-connection');
+            let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
+            let ntopics = [];
+            for(let i=0;i<topics.length;i++) {
+                if(topics[i].id !== $(e.currentTarget).attr('data-topic')) {
+                ntopics.push(topics[i]);
+                }
+            }
+            window.localStorage.setItem("topics_"+connectionId,JSON.stringify(ntopics));
+            $('#overviewTable')
+            connectMQTT();
+        })
+        $('.shareTopic').off();
+        $('.shareTopic').on('click',function(e) {
+            const connectionId = $(e.currentTarget).attr('data-connection');
+            let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
+            let connection = JSON.parse(window.localStorage.getItem("connection_"+connectionId));
+            let ntopics = [];
+            for(let i=0;i<topics.length;i++) {
+                if((topics[i].id == $(e.currentTarget).attr('data-topic'))&&(topics[i] !== null)) {
+                ntopics.push(topics[i]);
+                }
+            }
+            let shareable = {
+                topics:ntopics,
+                connection:connection
+            };
+            $('#exportTxt').val(JSON.stringify(shareable));
+            $('#exportTxt').show();
+            $('#gtpShareId').hide();
+            $('#exportSettings').modal('show')
+            console.log(shareable);
+        })
+
+        sortability();
+    } catch(e) {
+        if(e.toString() == "Error: Connection refused: Not authorized") {
+            console.log("ReAuthenticating");
+            $.ajax({
+                type: "POST",
+                url: "https://integration.corrently.io/node-red/reAuthenticate",
+                data: "&username=" + encodeURIComponent(cloudUser.username)+"&password=" + encodeURIComponent(cloudUser.password),
+                success: function(data) {
+                    console.log("Success",data);
+                    setTimeout(connectMQTT,1000);
+                }
+            });
         }
     }
-    html += '</div>'
-    $('#overviewTable').html(html);
-    $('#availConnections').html(availConnections);
-    $('#availConnections').off();
-    $('#availConnections').on('change',function(e) {
-        const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+$(e.currentTarget).val()));
-        for (const [key, value] of Object.entries(connectionSettings)) {
-            $('#mqtt_'+key).val(value);
-        }
-    });
-    $('.saveTopic').off();
-    $('.saveTopic').on('click',function(e) {
-        const connectionId = $(e.currentTarget).attr('data-connection');
-        let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
-        for(let i=0;i<topics.length;i++) {
-            if(topics[i].id == $(e.currentTarget).attr('data-topic')) {
-                topics[i].alias = $('#alias_'+$(e.currentTarget).attr('data-topic')).val();
-                topics[i].renderer = $('#renderer_'+$(e.currentTarget).attr('data-topic')).val();
-                topics[i].colorize = $('#colorize_'+$(e.currentTarget).attr('data-topic')).val();
-            }
-        }
-        window.localStorage.setItem("topics_"+connectionId,JSON.stringify(topics));
-        $('#overviewTable')
-        connectMQTT();
-    })
-    $('.deleteTopic').off();
-    $('.deleteTopic').on('click',function(e) {
-        const connectionId = $(e.currentTarget).attr('data-connection');
-        let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
-        let ntopics = [];
-        for(let i=0;i<topics.length;i++) {
-            if(topics[i].id !== $(e.currentTarget).attr('data-topic')) {
-               ntopics.push(topics[i]);
-            }
-        }
-        window.localStorage.setItem("topics_"+connectionId,JSON.stringify(ntopics));
-        $('#overviewTable')
-        connectMQTT();
-    })
-    $('.shareTopic').off();
-    $('.shareTopic').on('click',function(e) {
-        const connectionId = $(e.currentTarget).attr('data-connection');
-        let topics = JSON.parse(window.localStorage.getItem("topics_"+connectionId));
-        let connection = JSON.parse(window.localStorage.getItem("connection_"+connectionId));
-        let ntopics = [];
-        for(let i=0;i<topics.length;i++) {
-            if((topics[i].id == $(e.currentTarget).attr('data-topic'))&&(topics[i] !== null)) {
-               ntopics.push(topics[i]);
-            }
-        }
-        let shareable = {
-            topics:ntopics,
-            connection:connection
-        };
-        $('#exportTxt').val(JSON.stringify(shareable));
-        $('#exportTxt').show();
-        $('#gtpShareId').hide();
-        $('#exportSettings').modal('show')
-        console.log(shareable);
-    })
-
-    sortability();
 }
 
 $(document).ready(async function() {
@@ -407,7 +429,7 @@ $(document).ready(async function() {
         html += '</svg></span>';
         $('#nodeRedLink').attr('href','http://'+window.location.hostname+':1880/red');
         // If edge we could add the Edge Connection here ... just to be save...
-        window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Corrently EDGE","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge"}));
+        window.localStorage.setItem("connection_edge",JSON.stringify({"connectionName":"Corrently EDGE","host":window.location.hostname,"port":1883,"protocol":"mqtt","clientId":"corrently-current","protocolId":"MQIsdp","protocolVersion":3,"connectionId":"edge","uiid":"current_edge","basePath":"#"}));
         $('#edgeContainer').show();
     } else 
     if(middleware == 'cloud') {
@@ -431,7 +453,7 @@ $(document).ready(async function() {
         link.click();
    });
    $('#btnShareSettings').on('click',function(e) {
-        const jsonValue = JSON.stringify($('#exportTxt').val());    
+        const jsonValue = $('#exportTxt').val();    
         $(e.currentTarget).attr('disabled','disabled');
         $.ajax({
             type: "POST",
@@ -534,7 +556,7 @@ $(document).ready(async function() {
             $('#bucketId').val(decodedText);
             $('#qrScanner').modal('hide');
             $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
-                $('#txtImport').val(JSON.parse(d.val));
+                $('#txtImport').val(JSON.stringify(d.val));
             });
             $('#importSettings').modal('show');
           }
@@ -554,7 +576,7 @@ $(document).ready(async function() {
     $('#frmShareCode').on('submit',function(e) {
         e.preventDefault();
         $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
-            $('#txtImport').val(JSON.parse(d.val));
+            $('#txtImport').val(d.val);
         });
     });
     $('#removeConnection').off();
@@ -586,7 +608,7 @@ $(document).ready(async function() {
             $('#mqttConnection').modal('hide');
             populateConnectionList(selectedConnection);
             if(typeof settings.basePath !== 'undefined') {
-                $('#nTopic').val(settings.basePath + "#");
+                $('#nTopic').val(settings.basePath);
             }
             $('#mqttTopics').modal('show');
         } else {
@@ -650,8 +672,11 @@ $(document).ready(async function() {
                 window.localStorage.setItem(key,JSON.stringify(value));
             }
         }
-
-        location.reload();
+        if(getUrlParameter('import')) {
+            location.href='?';
+        } else {
+            location.reload();
+        }
     });
 
     $('#edgeToBridge').on('submit',function(e) {
@@ -686,5 +711,14 @@ $(document).ready(async function() {
         }
     });
     connectMQTT();
-    
+
+    if(getUrlParameter('import')) {
+        $('#importSettings').modal('show');
+        $('#bucketId').val(getUrlParameter('import'));
+    }
+    $('#jumpWizard').on('change',function(e) {
+        if( (''+$(e.currentTarget).val()).length > 0 ) {
+            location.href=$(e.currentTarget).val()+"?returnUrl="+encodeURIComponent(window.location.href);
+        } 
+    })
 });
