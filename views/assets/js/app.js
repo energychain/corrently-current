@@ -653,6 +653,10 @@ $(document).ready(async function() {
     
     $("#btnBridgeSettings").on('click',function() {
         populateConnectionList();
+        let cloud = JSON.parse(window.localStorage.getItem("connection_cloud"));
+        $('#bridgeConnection').append('<option value="'+cloud.connectionId+'" selected>'+cloud.connectionName+'</option>');  
+        $('#basepath').val(cloud.basePath);
+           
         $('#bridgeSettings').modal('show');
     });
 
@@ -685,7 +689,7 @@ $(document).ready(async function() {
         const form = $(e.target);
         const settings = convertFormToJSON(form);
         let bridgeConf = JSON.parse(window.localStorage.getItem("connection_"+settings.connection));
-        bridgeConf.basepath = settings.basepath;
+        bridgeConf.basepath = settings.basePath;
         front.send("/corrently/mqtt/bridge",JSON.stringify(bridgeConf));
         $('#bridgeSettings').modal('hide');
     });
