@@ -2,19 +2,45 @@
     "short_name": "Corrently Current",
     "name": "Corrently Current  - PWA",
     "icons": [
-        {
-            "src": "/assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e",
-            "type": "image/png",
-            "sizes": "192x192"
-        },
-        {
-            "src": "/assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1",
-            "type": "image/png",
-            "sizes": "512x512"
-        }
+      {
+        "src": "/assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "/assets/img/android/android-launchericon-48-48.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      },
+      {
+        "src": "/assets/img/android/android-launchericon-72-72.png",
+        "type": "image/png",
+        "sizes": "72x72"
+      },
+      {
+        "src": "/assets/img/android/android-launchericon-96-96.png",
+        "type": "image/png",
+        "sizes": "96x96"
+      },
+      {
+        "src": "/assets/img/android/android-launchericon-144-144.png",
+        "type": "image/png",
+        "sizes": "144x144"
+      }
     ],
     "start_url": "index.html",
     "background_color": "#ffffff",
     "theme_color": "#00880e",
-    "display": "fullscreen"
-}
+    "display": "fullscreen",
+    "description": "Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface. Corrently-Current is the name of the UI components that could be built as a standalone Android app, deployed to a server or as an executable to use on a desktop. The Corrently-Current something makes heavily use of MQTT.",
+    "dir": "auto",
+    "lang": "en",
+    "categories": [
+      "utilities"
+    ]
+  }
