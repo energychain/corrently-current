@@ -42,7 +42,7 @@
                 </svg></span>
         </div>
     </nav>
-    <div class="container border rounded shadow" style="margin-top: 150px;background: var(--bs-body-bg);">
+    <div class="container border rounded shadow" style="margin-top: 150px;margin-bottom:25px;background: var(--bs-body-bg);">
         <h1 class="text-secondary">Current<button class="btn btn-secondary btn-sm float-end" id="btnShareCurrent" type="button" style="margin-top: 8px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-share">
                     <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"></path>
                 </svg>&nbsp;Share / Export</button></h1>
@@ -64,13 +64,15 @@
             </div>
         </div>
     </div>
-    <div class="container border rounded shadow" id="ozContainer" style="margin-top:50px;background: var(--bs-body-bg);">
+    <div class="container border rounded shadow" id="ozContainer" style="margin-top:25px;margin-bottom:25px;background: var(--bs-body-bg);">
         <h1 class="text-secondary">Helper</h1>
         <div class="input-group"><span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-magic">
                     <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0v1.829Zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707L14 2.707ZM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707L7.293 4Zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1h1.829Zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1h1.829ZM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707L13.293 10ZM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0v1.829Zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0L8.354 9.06Z"></path>
                 </svg></span><select class="form-select" id="jumpWizard">
                 <option value="" selected="">Please select...</option>
                 <optgroup label="Commons">
+                    <option value="./edge.html">Corrently EDGE</option>
+                    <option value="./cloudmqtt.html">Custom MQTT Device</option>
                     <option value="https://energychain.github.io/site_ecoflow_mqtt_credentials/gridfrequency.html">Grid Frequency (ENTSOe)</option>
                 </optgroup>
                 <optgroup label="Powerstation">
@@ -78,7 +80,7 @@
                 </optgroup>
             </select></div><small class="form-text">Will redirect to the website of the wizard!</small>
     </div>
-    <div class="container border rounded shadow" id="edgeContainer" style="margin-top:50px;background: var(--bs-body-bg);">
+    <div class="container border rounded shadow" id="edgeContainer" style="margin-top:25px;margin-bottom:25px;background: var(--bs-body-bg);">
         <h1 class="text-secondary">EDGE</h1>
         <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
             <div class="col-4 col-lg-4"><a class="btn btn-secondary w-100" role="button" id="nodeRedLink" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-hdd-network">
@@ -248,8 +250,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=7e09a350584936670bab633993c7953a"></script>
-    <script src="assets/js/class_mqttsource.js?h=f94f47b5358416dd2fed128d191feee4"></script>
-    <script src="assets/js/app.js?h=a1153c93df3bc2d4225ceae9f7e0ffbc"></script>
+    <script src="assets/js/class_mqttsource.js?h=206fecba9bbc593bea8fb2db2015ea3f"></script>
+    <script src="assets/js/app.js?h=7d400a936a25bc4df09df71638e89393"></script>
     <script src="assets/js/html5qr.js?h=d88d3200cb547c9e86ee972975561dcd"></script>
 </body>
 

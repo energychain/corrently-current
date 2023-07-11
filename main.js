@@ -111,7 +111,12 @@ back.on("/corrently/mqtt/connect",function(msg) {
                 },SESSION_PING * 3);
             }
         });
-
+        back.on("/corrently/mqtt/disconnect",function(msg) {
+            console.log("Disconnect with msg",msg);
+            if(msg == _connectionOptions.uiid) {
+                mqttclient.end();
+            }
+        });
         mqttclient.on('error',(e) =>{
             console.log(e.toString());
             back.send("/corrently/mqtt/error",JSON.stringify({sessionId:sessionId,status:"failed",uiid:_connectionOptions.uiid,error:e.toString()}));

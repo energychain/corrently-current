@@ -57,7 +57,14 @@ class MQTTSource {
     connect() {
         const parent = this;
         return new Promise((resolve,reject) => {
+            let resolveable = false;
             parent.connectSettings.uiid = parent.connectSettings.connectionId;
+            setTimeout(function() {
+                if(!resolveable) {
+                    console.error("Connection timeout for ",parent.connectSettings.connectionName);
+                reject("Connection Timeout");
+                }
+            },5000);
 
             front.on("/corrently/mqtt/connected",function(msg) {
                 let sessionInfo = JSON.parse(msg);
@@ -70,11 +77,14 @@ class MQTTSource {
                     parent.sessionId = sessionInfo.sessionId;
                     parent.connected = true;
                     window.localStorage.setItem('connection_'+parent.connectSettings.connectionId,JSON.stringify(parent.connectSettings));
+                    resolveable = true;
                     resolve(parent.connectSettings.connectionId);
                 }
             });
 
             front.on("/corrently/mqtt/error",function(msg) {
+                console.log("Error",msg);
+                front.send("/corrently/mqtt/disconnect",parent.connectSettings.uiid);
                 let sessionInfo = JSON.parse(msg);
                 reject(sessionInfo.error);
             });
