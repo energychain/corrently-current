@@ -515,13 +515,16 @@ $(document).ready(async function() {
         const connection = new MQTTSource(connectionId);
         
         connection.connect().then(function(t) {
-            connection.subscribe(topic,function(msg) {
-              //  $('#discoverdTopics').append('<option>'+msg+'</option>');
-            });
+            connection.subscribe(topic,function(msg) {     });
+            connection.subscribe(topic+'#',function(msg) {   });
             connection.subscribe('topicsDiscovery',function(msg) {
-                $('#discoverdTopics').append('<option>'+msg+'</option>');
+                let nice_topic = msg; 
+                const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+connectionId));
+                let basePath = connectionSettings.basePath;
+                nice_topic = nice_topic.replace(basePath,'./');
+                $('#discoverdTopics').append('<option value="'+msg+'">'+nice_topic+'</option>');
             });
-            $('#nTopic').val('');
+           // $('#nTopic').val('');
             $('.noTopic').removeAttr('disabled');
             $('#btnAddTopic').removeAttr('disabled'); 
         });
@@ -686,7 +689,23 @@ $(document).ready(async function() {
                 let topics = importJSON.topics;
                  window.localStorage.setItem("topics_"+connection.connectionId,JSON.stringify(topics));
                  singleImport = true;
-        } 
+        } else
+        if(typeof importJSON.edge_flow !== 'undefined') {
+        
+            singleImport = true;
+            front.send("/corrently/edge/add-flow",JSON.stringify(importJSON.edge_flow));
+            let topics = window.localStorage.getItem("topics_edge");
+            if((typeof topics == 'undefined') || (topics == null)) {
+                    topics = "[]";
+            }   
+            topics = JSON.parse(topics);
+
+            for(let i=0;i<importJSON.topics_edge.length;i++) {
+                topics.push(importJSON.topics_edge[i]);
+            }
+            window.localStorage.setItem("topics_edge",JSON.stringify(topics));
+
+        }
         if(!singleImport) {
             for (const [key, value] of Object.entries(importJSON)) {
                 window.localStorage.setItem(key,JSON.stringify(value));

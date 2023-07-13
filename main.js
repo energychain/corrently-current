@@ -16,13 +16,18 @@ const _randomString = function() {
 }
 
 let mqttsessions = {};
+let edgesession = null;
+
 let uuids = {};
 
 /** Handling Edge Connectivity */
 back.on("/corrently/mqtt/bridge",function(msg) {
     try {
-        const mqttclient = mqtt.connect("mqtt://localhost:1883");
+        let config = JSON.parse(msg);
+
+        const mqttclient = mqtt.connect("mqtt://"+config.edge.host+":1883");
         mqttclient.on('connect', () => {
+            console.log("Connected to Edge for Bridge Setup");
             mqttclient.publish('corrently/mqtt/connect', msg);
         });
     } catch(e) {
@@ -30,6 +35,10 @@ back.on("/corrently/mqtt/bridge",function(msg) {
     }
 });
 
+back.on("/corrently/edge/add-flow",function(msg) {
+    // TODO Listen to Response via ./get 
+    edgesession.publish('corrently/edge/nr-add-flow/set',msg);
+});
 
 back.on("/corrently/mqtt/connect",function(msg) {
    try {
@@ -48,6 +57,10 @@ back.on("/corrently/mqtt/connect",function(msg) {
         const mqttclient = mqtt.connect(
                 _connectionOptions
         );
+
+        if(_connectionOptions.uiid == 'edge') {
+            edgesession = mqttclient;
+        }
 
         mqttclient.on('connect', () => {
             let msgStore = {};
