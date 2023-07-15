@@ -1,5 +1,5 @@
 # Corrently-Current
-![npm](https://img.shields.io/npm/dy/:scope/corrently-cloud)
+![npm](https://img.shields.io/npm/dy/corrently-cloud)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/energychain/corrently-current/main)
 ![npm](https://img.shields.io/npm/v/corrently-current)
 
