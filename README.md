@@ -2,6 +2,22 @@
 
 Corrently-Current is a quickly nailed-together *something* to collect and display energy data in a horrible mobile user interface. Corrently-Current is the name of the UI  components that could be built as a standalone Android app, deployed to a server or as an executable to use on a desktop. The Corrently-Current *something* makes heavily use of MQTT.
 
+- Simple and clear display of smart home device data
+- Quick access to device data without complex control functions
+- Intuitive user interface for a user-friendly experience
+- Supports various devices and manufacturers
+- Available as an Android app
+
+## corrently-current with [corrently-edge](https://github.com/energychain/corrently-edge)
+- Seamless integration of smart home devices through Corrently Edge
+- Easy display and monitoring of device data with Corrently Current
+- Reduced complexity of integration and control
+- Efficient utilization of network resources through central data retrieval
+- Graphical editor for individual customization and expansion of functionality
+- Suitable for residential and commercial applications
+
+
+
 ## Audience
 
 Corrently Current caters to smart-home owners who are looking for a user-friendly and streamlined way to view the data from their smart-home devices. It appeals to users who desire quick and straightforward access to device data without dealing with complex control functions. Corrently Current is ideal for users who prefer an intuitively designed user interface and want to consolidate data from various devices and manufacturers into a single application.
