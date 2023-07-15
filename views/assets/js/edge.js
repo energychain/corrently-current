@@ -4,6 +4,23 @@ $(document).ready(function(e) {
         $('#edgeHostname').val(settings.host);
     }
 
+    $('#btnRetrieve').on('click',function(e) {
+        console.log("Retrieve");
+        front.on("/corrently/edge/topics/result",function(msg) {
+            const nTopics = JSON.parse(msg);
+            window.localStorage.setItem("topics_edge",JSON.stringify(nTopics));
+            location.href="./index.html";
+        });
+
+        const settings = JSON.parse(window.localStorage.getItem("topics_edge"));
+        front.send("/corrently/edge/topics/get",JSON.stringify(settings));
+    });
+
+    $('#btnStore').on('click',function(e) {
+        const settings = JSON.parse(window.localStorage.getItem("topics_edge"));
+        front.send("/corrently/edge/topics/set",JSON.stringify(settings));
+        location.href="./index.html";
+    });
 
     $('#edgeSettings').on('submit',function(e) {
         e.preventDefault();

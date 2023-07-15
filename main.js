@@ -35,6 +35,26 @@ back.on("/corrently/mqtt/bridge",function(msg) {
     }
 });
 
+back.on("/corrently/edge/topics/set",function(msg) {
+    edgesession.publish('corrently/edge/topics/set',msg);
+});
+back.on("/corrently/edge/topics/get",function(msg) {
+    if(edgesession !== null) {
+        edgesession.subscribe("corrently/edge/topics/result",function(err,msg2) {
+           
+        });
+        edgesession.on('message', (topic, payload) => {
+            if(topic == 'corrently/edge/topics/result') {
+                back.send("/corrently/edge/topics/result",""+payload);
+            }
+        });
+
+        console.log("Request via MQTT");
+        edgesession.publish('corrently/edge/topics/get',msg);
+    } else {console.error("EdgeSession not active")}
+});
+
+
 back.on("/corrently/edge/add-flow",function(msg) {
     // TODO Listen to Response via ./get 
     edgesession.publish('corrently/edge/nr-add-flow/set',msg);
