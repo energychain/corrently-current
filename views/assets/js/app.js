@@ -720,10 +720,10 @@ $(document).ready(async function() {
 
     $('#edgeToBridge').on('submit',function(e) {
         e.preventDefault();
-        const form = $(e.target);
-        const settings = convertFormToJSON(form);
-        let bridgeConf = JSON.parse(window.localStorage.getItem("connection_"+settings.connection));
-        bridgeConf.basepath = settings.basePath;
+        let bridgeConf = JSON.parse(window.localStorage.getItem("connection_cloud"));
+        // bridgeConf.basepath = settings.basepath;
+        bridgeConf.enabled = $('#statusBridge').attr('data-checked');
+        bridgeConf.edge = JSON.parse(window.localStorage.getItem("connection_edge"));
         front.send("/corrently/mqtt/bridge",JSON.stringify(bridgeConf));
         $('#bridgeSettings').modal('hide');
     });

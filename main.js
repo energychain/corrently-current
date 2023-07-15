@@ -24,7 +24,7 @@ let uuids = {};
 back.on("/corrently/mqtt/bridge",function(msg) {
     try {
         let config = JSON.parse(msg);
-
+        // TODO: Care about activation Flag
         const mqttclient = mqtt.connect("mqtt://"+config.edge.host+":1883");
         mqttclient.on('connect', () => {
             console.log("Connected to Edge for Bridge Setup");

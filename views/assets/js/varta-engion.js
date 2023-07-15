@@ -32,6 +32,8 @@ $(document).ready(function(e) {
         const widgetId = _randomString();
 
         let settings = {};
+
+
         settings['topics_edge'] = [
             {
                 "topic":"varta_engion/SOC_GS",
@@ -42,13 +44,6 @@ $(document).ready(function(e) {
             {
                 "topic":"varta_engion/PSoll",
                 "alias":"W Soll",
-                "id":_randomString(),
-                "colorize":"1"
-            },
-            {
-                "topic":"/app/device/property/"+$('#serial').val(),
-                "renderer":"jsonpath:$.params['pd.wattsInSum']",
-                "alias":"W In",
                 "id":_randomString(),
                 "colorize":"1"
             }

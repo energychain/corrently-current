@@ -19,11 +19,13 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=fe7fdfec700d100dc745dc64d3600cb2">
     <link rel="manifest" href="manifest.json?h=28b0a1e01fc11297206846c45fc607e3">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css?h=4a0a5888449ae2bad1cf0c0f1eb40cf4">
     <link rel="stylesheet" href="assets/css/styles.css?h=5ed84bd7390f7014cebb2d3496d846ae">
+    <link rel="stylesheet" href="assets/css/xToggle.css?h=945018c8dc94904db8213f199900caaf">
 </head>
 
 <body style="background: rgb(20,122,80);">
-    <nav class="navbar navbar-dark navbar-expand-lg fixed-top shadow-lg navbar-custom" style="background: #ffffff;margin-top: 10px;margin-bottom: 15px;">
+    <nav class="navbar navbar-expand-lg fixed-top shadow-lg navbar-custom navbar-dark" style="background: #ffffff;margin-top: 10px;margin-bottom: 15px;">
         <div class="container"><a class="navbar-brand link-dark" href="https://corrently.io/" style="font-weight: bold;font-size: 25px;"><img class="img-fluid" src="assets/img/corrently-logo.webp?h=1097915e26a69ed47314de449e2aa88a"><span style="margin-left: 15px;"></span></a><button data-bs-toggle="collapse" class="navbar-toggler text-light text-bg-dark" data-bs-target="#navbarResponsive"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse text-dark" id="navbarResponsive" style="background: #ffffff;">
                 <ul class="navbar-nav text-dark ms-auto">
@@ -78,6 +80,14 @@
                 <optgroup label="Battery (Powerstation, HESS)">
                     <option value="https://energychain.github.io/site_ecoflow_mqtt_credentials/current.html">Ecoflow</option>
                     <option value="./varta-engion.html">Varta Home Storage (Engion)</option>
+                </optgroup>
+                <optgroup label="EDGE Devices">
+                    <option value="./fritz-dect-2xx.html">AVM Fritz DECT 2xx (Smart Plug)</option>
+                    <option value="./sma-em20.html">SMA Energy Meter (EM20)</option>
+                    <option value="./varta-engion.html">Varta Home Storage (Engion)</option>
+                </optgroup>
+                <optgroup label="Smart Plugs with Energy Meter">
+                    <option value="./fritz-dect-2xx.html">AVM Fritz DECT 2xx (Smart Plug)</option>
                 </optgroup>
             </select></div><small class="form-text">Will redirect to the website of the wizard!</small>
     </div>
@@ -206,14 +216,16 @@
             <div class="modal-content">
                 <form id="edgeToBridge">
                     <div class="modal-header">
+                        <!-- Start: xToggle -->
+                        <div class="border rounded-pill border-0 d-flex xToggle" id="statusBridge" style="width: 32px;height: 18px;cursor: pointer;margin-right: 15px;background: var(--bs-secondary-color);" data-checked="true" onclick="onToggle(this)"><i class="fas fa-circle" style="/*float: left;*/height: 100%;padding-top: 1px;padding-left: 2px;padding-right: 2px;color: white;padding-bottom: 5px;"></i></div><!-- End: xToggle -->
                         <h4 class="modal-title">Edge to Cloud Bridge</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body"><label class="form-label"><strong>Connection to bridge</strong></label><select class="form-select connectionListForTopics" id="bridgeConnection" style="margin-bottom: 15px;" name="connection">
+                    <div class="modal-body"><label class="form-label"><strong>Connection to bridge</strong></label><select class="form-select connectionListForTopics" id="bridgeConnection" style="margin-bottom: 15px;" name="connection" disabled="">
                             <optgroup label="This is a group"></optgroup>
                         </select><label class="form-label"><strong>Basepath (on Bridge)</strong></label>
-                        <div class="input-group"><input class="form-control" type="text" id="basepath" name="basepath" placeholder="(Will relay from edge topic to basepath/topic on bridge)" required=""></div>
+                        <div class="input-group"><input class="form-control" type="text" id="basepath" name="basepath" placeholder="(Will relay from edge topic to basepath/topic on bridge)" required="" disabled=""></div>
                     </div>
-                    <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="submit">Save</button></div>
+                    <div class="modal-footer"><button class="btn btn-secondary" type="submit">Save</button></div>
                 </form>
             </div>
         </div>
@@ -252,8 +264,9 @@
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=7e09a350584936670bab633993c7953a"></script>
     <script src="assets/js/class_mqttsource.js?h=206fecba9bbc593bea8fb2db2015ea3f"></script>
-    <script src="assets/js/app.js?h=ba82a9977785b36d0e75513b13cb3936"></script>
+    <script src="assets/js/app.js?h=d58de7d098e9aedb91593a857fb649a3"></script>
     <script src="assets/js/html5qr.js?h=d88d3200cb547c9e86ee972975561dcd"></script>
+    <script src="assets/js/xToggle-Toggle.js?h=df39a314906b5fd765ecda7925a46126"></script>
 </body>
 
 </html>

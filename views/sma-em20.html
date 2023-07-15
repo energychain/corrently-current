@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Corrently Current - MQTT Connection Settings</title>
+    <title>Corrently Current - Varta Home Storage Settings</title>
     <meta name="theme-color" content="#00880e">
     <meta name="twitter:card" content="summary">
     <meta property="og:title" content="Corrently Current">
     <meta property="og:image" content="assets/img/corrently-logo.webp?h=1097915e26a69ed47314de449e2aa88a">
-    <meta name="description" content="Light EMS to run via Smartphones">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface">
     <meta name="twitter:image" content="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
+    <meta name="description" content="Connect to Varta Engion (Home Storage) via Edge">
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e">
@@ -43,48 +43,22 @@
                 </svg></span>
         </div>
     </nav>
-    <div class="container border rounded shadow" id="ozContainer" style="margin-top: 150px;background: var(--bs-body-bg);">
-        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-hdd-network" style="margin-right: 5px;">
-                <path d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM3 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>
-                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2V4zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5z"></path>
-            </svg>MQTT Cloud Connection</h1><small class="form-text">Might be used to publish data from any device to the cloud using MQTT.&nbsp;</small>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Host</td>
-                        <td class="font-monospace">mqtt.corrently.cloud</td>
-                    </tr>
-                    <tr>
-                        <td>Port&nbsp;</td>
-                        <td class="font-monospace">1883</td>
-                    </tr>
-                    <tr>
-                        <td>Username</td>
-                        <td class="font-monospace cloudUser">-</td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                        <td class="font-monospace cloudPassword">-</td>
-                    </tr>
-                    <tr>
-                        <td>basePath</td>
-                        <td class="font-monospace cloudBasePath">-</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <h3 class="text-secondary" style="margin-top: 25px;">Sample mosquitto_pub</h3><code>mosquitto_pub -h mqtt.corrently.cloud -p 1883 -u <span class="cloudUser">-</span>&nbsp;-P <span class="cloudPassword">-</span>&nbsp;-t <span class="cloudBasePath">-</span>/test -m 1337</code>
-        <p>Will write '1337' into datapoint test.</p>
+    <div class="container border rounded shadow" id="ozContainer" style="margin-top: 150px;background: var(--bs-body-bg);padding-bottom: 15px;">
+        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-battery-charging" style="margin-right: 5px;">
+                <path d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"></path>
+                <path d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
+                <path d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2V6zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.405z"></path>
+                <path d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"></path>
+            </svg>SMA EnergyMeter (EM-20)</h1><small class="form-text">Connect to EM20 via Corrently Edge.</small>
+        <form id="deviceSettings" style="margin-top: 15px;">
+            <div class="input-group"><span class="input-group-text">Broadcast Address</span><input class="form-control" type="text" id="deviceIP" required="" value="239.12.255.254"><button class="btn btn-secondary" type="submit">Connect</button></div>
+        </form>
     </div>
     <script src="assets/js/jquery.min.js?h=84e399b8f2181ccd73394fdeddff1638"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js?h=b4349cf7232e6b66621e089f2b9beee5"></script>
     <script src="assets/js/bs-init.js?h=f85385df9bc7fca4241bc1dbf53b9d61"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
-    <script src="assets/js/cloudmqtt.js?h=abc7ef2953ad7a19f6a181877b5a3826"></script>
+    <script src="assets/js/sma-em20.js?h=574ed87ba663812e30915d8221754120"></script>
 </body>
 
 </html>
