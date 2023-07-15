@@ -1,4 +1,7 @@
 # Corrently-Current
+![npm](https://img.shields.io/npm/dy/:scope/corrently-cloud)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/energychain/corrently-current/main)
+![npm](https://img.shields.io/npm/v/corrently-current)
 
 Corrently-Current is a quickly nailed-together *something* to collect and display energy data in a horrible mobile user interface. Corrently-Current is the name of the UI  components that could be built as a standalone Android app, deployed to a server or as an executable to use on a desktop. The Corrently-Current *something* makes heavily use of MQTT.
 

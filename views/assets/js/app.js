@@ -38,6 +38,8 @@ const sortability = function() {
 };
 
 async function render(connectionId,dataPoint,payload) {
+    console.log('render()',connectionId,dataPoint);
+
     let elements = $('.'+connectionId+'[corrently-datapoint="'+dataPoint+'"]');
     let displayValue = '';
 
@@ -394,6 +396,44 @@ async function connectMQTT() {
 }
 
 $(document).ready(async function() {
+    const applyImport = function() {
+        let importJSON = JSON.parse($('#txtImport').val());
+        let singleImport = false;
+        if(typeof importJSON.connection !== 'undefined') {
+            let connection = importJSON.connection;
+            window.localStorage.setItem("connection_"+connection.connectionId,JSON.stringify(connection));
+            singleImport = true;
+                let topics = importJSON.topics;
+                 window.localStorage.setItem("topics_"+connection.connectionId,JSON.stringify(topics));
+                 singleImport = true;
+        } else
+        if(typeof importJSON.edge_flow !== 'undefined') {
+        
+            singleImport = true;
+            front.send("/corrently/edge/add-flow",JSON.stringify(importJSON.edge_flow));
+            let topics = window.localStorage.getItem("topics_edge");
+            if((typeof topics == 'undefined') || (topics == null)) {
+                    topics = "[]";
+            }   
+            topics = JSON.parse(topics);
+
+            for(let i=0;i<importJSON.topics_edge.length;i++) {
+                topics.push(importJSON.topics_edge[i]);
+            }
+            window.localStorage.setItem("topics_edge",JSON.stringify(topics));
+
+        }
+        if(!singleImport) {
+            for (const [key, value] of Object.entries(importJSON)) {
+                window.localStorage.setItem(key,JSON.stringify(value));
+            }
+        }
+        if(getUrlParameter('import')) {
+            location.href='./index.html';
+        } else {
+            location.reload();
+        }
+    }
     const getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = window.location.search.substring(1),
             sURLVariables = sPageURL.split('&'),
@@ -679,44 +719,7 @@ $(document).ready(async function() {
     });
 
 
-    $('#btnApplyImport').on('click',function() {
-        let importJSON = JSON.parse($('#txtImport').val());
-        let singleImport = false;
-        if(typeof importJSON.connection !== 'undefined') {
-            let connection = importJSON.connection;
-            window.localStorage.setItem("connection_"+connection.connectionId,JSON.stringify(connection));
-            singleImport = true;
-                let topics = importJSON.topics;
-                 window.localStorage.setItem("topics_"+connection.connectionId,JSON.stringify(topics));
-                 singleImport = true;
-        } else
-        if(typeof importJSON.edge_flow !== 'undefined') {
-        
-            singleImport = true;
-            front.send("/corrently/edge/add-flow",JSON.stringify(importJSON.edge_flow));
-            let topics = window.localStorage.getItem("topics_edge");
-            if((typeof topics == 'undefined') || (topics == null)) {
-                    topics = "[]";
-            }   
-            topics = JSON.parse(topics);
-
-            for(let i=0;i<importJSON.topics_edge.length;i++) {
-                topics.push(importJSON.topics_edge[i]);
-            }
-            window.localStorage.setItem("topics_edge",JSON.stringify(topics));
-
-        }
-        if(!singleImport) {
-            for (const [key, value] of Object.entries(importJSON)) {
-                window.localStorage.setItem(key,JSON.stringify(value));
-            }
-        }
-        if(getUrlParameter('import')) {
-            location.href='?';
-        } else {
-            location.reload();
-        }
-    });
+    $('#btnApplyImport').on('click',applyImport);
 
     $('#edgeToBridge').on('submit',function(e) {
         e.preventDefault();
@@ -754,6 +757,11 @@ $(document).ready(async function() {
     if(getUrlParameter('import')) {
         $('#importSettings').modal('show');
         $('#bucketId').val(getUrlParameter('import'));
+        $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
+            $('#txtImport').val(d.val);
+            applyImport();
+        });
+
     }
     $('#jumpWizard').on('change',function(e) {
         if( (''+$(e.currentTarget).val()).length > 0 ) {
