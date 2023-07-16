@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Corrently Current - Varta Home Storage Settings</title>
+    <title>Corrently Current - Deye Inverter Settings</title>
     <meta name="theme-color" content="#00880e">
     <meta name="twitter:card" content="summary">
     <meta property="og:title" content="Corrently Current">
@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:description" content="Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface">
     <meta name="twitter:image" content="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
-    <meta name="description" content="Connect to Varta Engion (Home Storage) via Edge">
+    <meta name="description" content="Connect to Deye Microinverter via Edge">
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e">
@@ -44,21 +44,19 @@
         </div>
     </nav>
     <div class="container border rounded shadow" id="ozContainer" style="margin-top: 150px;background: var(--bs-body-bg);padding-bottom: 15px;">
-        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-battery-charging" style="margin-right: 5px;">
-                <path d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"></path>
-                <path d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
-                <path d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2V6zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.405z"></path>
-                <path d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"></path>
-            </svg>SMA EnergyMeter (EM-20)</h1><small class="form-text">Connect to EM20 via Corrently Edge.</small>
+        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-exclamation-triangle-fill" style="margin-right: 5px;">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+            </svg>Deye Inverter</h1><small class="form-text">Connect to Deye Microinverter via Corrently Edge.</small>
         <form id="deviceSettings" style="margin-top: 15px;">
-            <div class="input-group"><span class="input-group-text">Broadcast Address</span><input class="form-control" type="text" id="deviceIP" required="" value="239.12.255.254"><button class="btn btn-secondary" type="submit">Connect</button></div>
+            <div class="input-group"><span class="input-group-text col-2">IP Address</span><input class="form-control" type="text" id="deviceIP" required=""></div>
+            <div class="input-group" style="margin-top: 15px"><span class="input-group-text col-2">Serial Number</span><input class="form-control" type="text" id="deviceSerial" required=""><button class="btn btn-secondary" type="submit">Connect</button></div>
         </form>
     </div>
     <script src="assets/js/jquery.min.js?h=84e399b8f2181ccd73394fdeddff1638"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js?h=b4349cf7232e6b66621e089f2b9beee5"></script>
     <script src="assets/js/bs-init.js?h=f85385df9bc7fca4241bc1dbf53b9d61"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
-    <script src="assets/js/sma-em20.js?h=c2463e684ca75f544c24f6f706162140"></script>
+    <script src="assets/js/deye-inverter.js?h=af237dcabaa0063867d411d5f8834199"></script>
 </body>
 
 </html>

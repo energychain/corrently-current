@@ -197,6 +197,18 @@ async function connectMQTT() {
                     const connection = new MQTTSource(connectionSettings);
                     try {
                         await connection.connect();
+                        if(key_id == 'cloud') {
+                            // This is how we handle edge to cloud bridge
+                            let datapoints = window.localStorage.getItem("topics_edge");
+                            if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
+                                datapoints = JSON.parse(datapoints);
+                                for(let i=0;i<datapoints.length;i++) {
+                                    connection.subscribe("corrently/users/"+cloudUser.username+"/"+datapoints[i].topic,function(msg) {
+                                            render(connection.getConnectionId(),datapoints[i].topic,msg);
+                                    });
+                                }
+                            }
+                        }
                         availConnections += '<option value="'+key_id+'">'+connectionSettings.connectionName+'</option>';
 
                         let datapoints = window.localStorage.getItem("topics_"+key_id);
@@ -214,6 +226,7 @@ async function connectMQTT() {
                 }
                 if(key_type == 'topics') {
                     let topicSettings = JSON.parse(value);
+                    // TODO If we are on edge topics and middleware=cloud we need to reconfigure
                     for(let i=0;i<topicSettings.length;i++) {
                         let connectionSettings = JSON.parse(window.localStorage.getItem('connection_'+key_id));
                         html += '<div class="col-md-4" title="'+topicSettings[i].topic+'">'
