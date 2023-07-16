@@ -99,6 +99,7 @@ back.on("/corrently/mqtt/connect",function(msg) {
                 back.send("/corrently/mqtt/connected",JSON.stringify({sessionId:sessionId,status:"connected",uiid:_connectionOptions.uiid}));
 
                 back.on('/corrently/mqtt/'+sessionId+'/subscribe',function(msg) {
+
                     mqttclient.subscribe(msg,function(err,msg2) {
                         if(err) {
                             back.send("/corrently/error","Session "+sessionId+" subsribe error "+err+" topic "+msg);  

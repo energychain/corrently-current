@@ -38,7 +38,6 @@ const sortability = function() {
 };
 
 async function render(connectionId,dataPoint,payload) {
-    console.log('render()',connectionId,dataPoint);
 
     let elements = $('.'+connectionId+'[corrently-datapoint="'+dataPoint+'"]');
     let displayValue = '';
@@ -199,16 +198,21 @@ async function connectMQTT() {
                         await connection.connect();
                         if(key_id == 'cloud') {
                             // This is how we handle edge to cloud bridge
-                            let datapoints = window.localStorage.getItem("topics_edge");
-                            if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
-                                datapoints = JSON.parse(datapoints);
-                                for(let i=0;i<datapoints.length;i++) {
-                                    connection.subscribe("corrently/users/"+cloudUser.username+"/"+datapoints[i].topic,function(msg) {
-                                            render(connection.getConnectionId(),datapoints[i].topic,msg);
-                                    });
+                            try {
+                                let datapoints = window.localStorage.getItem("topics_edge");
+                                if((typeof datapoints !== 'undefined') && (datapoints !== null)) {
+                                    datapoints = JSON.parse(datapoints);
+                                    for(let i=0;i<datapoints.length;i++) {
+                                        connection.subscribe("corrently/users/"+cloudUser.username+"/"+datapoints[i].topic,function(msg) {
+                                                render('edge',datapoints[i].topic,msg);
+                                        });
+                                    }
                                 }
+                            } catch(e) {
+                                console.error("Failed to setup edge to cloud",e);
                             }
                         }
+
                         availConnections += '<option value="'+key_id+'">'+connectionSettings.connectionName+'</option>';
 
                         let datapoints = window.localStorage.getItem("topics_"+key_id);
@@ -628,7 +632,7 @@ $(document).ready(async function() {
             $('#bucketId').val(decodedText);
             $('#qrScanner').modal('hide');
             $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+$('#bucketId').val(),function(d) {
-                $('#txtImport').val(JSON.stringify(d.val));
+                $('#txtImport').val(d.val);
             });
             $('#importSettings').modal('show');
           }

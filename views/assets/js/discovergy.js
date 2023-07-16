@@ -239,7 +239,7 @@ $(document).ready(function(e) {
                     "type": "function",
                     "z": "e14719f1beb6a01b",
                     "name": "Transform MQTT Publish",
-                    "func": "if(msg.payload.time < new Date().getTime()-900000) {\n    msg = null;\n} else {\n    msg.payload.values.time = msg.payload.time;\n    msg.payload = msg.payload.values;\n    msg.topic = \"discovergy/\"+msg.meter.fullSerialNumber;\n    for (const [key, value] of Object.entries(msg.payload)) {\n        node.send({\n            payload:key,\n            topic:msg.topic + \"/\" + key\n        });\n    }\n}\nreturn null;",
+                    "func": "if(msg.payload.time < new Date().getTime()-900000) {\n    msg = null;\n} else {\n    msg.payload.values.time = msg.payload.time;\n    msg.payload = msg.payload.values;\n    msg.topic = \"discovergy/\"+msg.meter.fullSerialNumber;\n    for (const [key, value] of Object.entries(msg.payload)) {\n        node.send({\n            payload:value,\n            topic:msg.topic + \"/\" + key\n        });\n    }\n}\nreturn null;",
                     "outputs": 1,
                     "noerr": 0,
                     "initialize": "",
