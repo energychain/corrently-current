@@ -62,6 +62,10 @@ back.on("/corrently/edge/add-flow",function(msg) {
 
 back.on("/corrently/mqtt/connect",function(msg) {
    try {
+        let msgStore = {};
+        back.on("/corrently/mqtt/empty",function(msg) {
+            msgStore = {};
+        });
         const _connectionOptions = JSON.parse(msg);
 
         const sessionId = _randomString();
@@ -83,7 +87,7 @@ back.on("/corrently/mqtt/connect",function(msg) {
         }
 
         mqttclient.on('connect', () => {
-            let msgStore = {};
+            
 
             if(typeof mqttsessions[sessionId] == 'undefined') {
                 mqttsessions[sessionId] = {
@@ -107,13 +111,16 @@ back.on("/corrently/mqtt/connect",function(msg) {
                         } else back.send("/corrently/console","Session "+sessionId+" subsribed to "+msg);
                     });
                     mqttclient.on('message', (topic, payload) => {
+                        payload = payload.toString();
                         if(typeof msgStore[topic] == 'undefined') {
                             back.send('/corrently/mqtt/'+sessionId+'/topicsDiscovery',topic);
+                            back.send('/corrently/mqtt/'+sessionId+'/'+topic,payload.toString()); 
+                        } else if(msgStore[topic] !== payload) {
+                            back.send('/corrently/mqtt/'+sessionId+'/'+topic,payload.toString());  
+                        } else {
+                          //  back.send('/corrently/mqtt/'+sessionId+'/'+topic,payload.toString()); 
                         }
-                        msgStore[topic] = payload.toString();
-                        back.send('/corrently/mqtt/'+sessionId+'/'+topic,payload.toString());                        
-                        
-                       // back.send("/corrently/console","MQTT Messsge on topic "+topic+": "+payload.toString());
+                        msgStore[topic] = payload; 
                     })
                 });
                 back.send("/corrently/console","MQTT Connected SessionID: "+sessionId+" to UIID:"+_connectionOptions.uiid);
@@ -123,7 +130,7 @@ back.on("/corrently/mqtt/connect",function(msg) {
                 const ping = function() {
                     const heartBeatStamp = _randomString();
                     back.on('/corrently/mqtt/'+sessionId+'/pong',function(msg) {
-                        if(msg == heartBeatStamp) {
+                        if((typeof mqttsessions[sessionId] !== 'undefined') && (msg == heartBeatStamp)) {
                             mqttsessions[sessionId].heartbeat = new Date().getTime();
                             mqttsessions[sessionId].openHeartbeats--;
                         }

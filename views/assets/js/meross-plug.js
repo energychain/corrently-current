@@ -33,103 +33,64 @@ $(document).ready(function(e) {
 
         let settings = {};
 
-
         settings['topics'] = [
             {
-                "topic":"deye/output/power",
-                "alias":"W Output",
+                "topic":"meross/current",
+                "alias":"W",
                 "id":_randomString(),
-                "colorize":"1"
+                "colorize":"1",
+                "renderer":"javascript:value=value/10"
             },
             {
-                "topic":"deye/output/frequency",
-                "alias":"Hz Grid Frequency",
+                "topic":"meross/voltage",
+                "alias":"V",
                 "id":_randomString(),
-                "colorize":"1"
-            },
-            {
-                "topic":"deye/temperature",
-                "alias":"° Temperature",
-                "id":_randomString(),
-                "colorize":"1"
+                "colorize":"1",
+                "renderer":"javascript:value=value/10"
             }
         ];
         settings['edge_flow'] = {
-            "modules": ["@binsoul/node-red-contrib-deye-sun-g3"],
-            "label": "DEYE Inverter",
+            "modules": [ "nr-meross-cloud"],
+            "label": "Meross Plug",
             "flow":[
                 {
-                    "id": "f54346856cc7d549",
-                    "type": "binsoul-deye-sun-g3",
-                    "z": "0760a039f0249b81",
-                    "outputProperty": "payload",
-                    "outputTarget": "msg",
-                    "deviceIp": $('#deviceIP').val(),
-                    "deviceSerialNumber": $('#deviceSerial').val(),
-                    "deviceTimeout": "20",
-                    "updateMode": "messages",
-                    "updateFrequency": "1",
+                    "id": "7575c53bccbfa593",
+                    "type": "MerossEnergy",
+                    "z": "df27ead50a5bb1e9",
                     "name": "",
-                    "x": 360,
-                    "y": 40,
-                    "wires": [
-                        [
-                            "61b3324b5f52e6c7"
-                        ]
-                    ]
-                },
-                {
-                    "id": "78a2dcc11f227a0d",
-                    "type": "inject",
-                    "z": "0760a039f0249b81",
-                    "name": "",
-                    "props": [
-                        {
-                            "p": "payload"
-                        },
-                        {
-                            "p": "topic",
-                            "vt": "str"
-                        }
-                    ],
-                    "repeat": "1800",
-                    "crontab": "",
-                    "once": true,
-                    "onceDelay": 0.1,
-                    "topic": "",
-                    "payload": "",
-                    "payloadType": "date",
+                    "username": $('#deviceUser').val(),
+                    "password": $('#devicePassword').val(),
                     "x": 130,
                     "y": 40,
                     "wires": [
                         [
-                            "f54346856cc7d549"
+                            "a690f76bfa850811"
                         ]
                     ]
                 },
                 {
-                    "id": "61b3324b5f52e6c7",
+                    "id": "a690f76bfa850811",
                     "type": "function",
-                    "z": "0760a039f0249b81",
-                    "name": "Convert to MQTT Publish",
-                    "func": "    msg.topic = \"deye/\";\n    for (const [key, value] of Object.entries(msg.payload)) {\n        let addTopic = key;\n        if(typeof value == 'object') {\n            for (const [key2, value2] of Object.entries(value)) {\n                node.send({\n                    payload: value2,\n                    topic: msg.topic + \"\" + key + \"/\" + key2\n                });\n            }\n        } else {\n            node.send({\n                payload: value,\n                topic: msg.topic + \"\" + key\n            });\n        }\n    }\n\nreturn null;\n",
+                    "z": "df27ead50a5bb1e9",
+                    "name": "Transform MQTT Topic",
+                    "func": "for (const [key, value] of Object.entries(msg.payload)) {\n    node.send({\n        topic: 'meross/' + key,\n        payload: value\n    });\n}\nreturn null;\n",
                     "outputs": 1,
                     "noerr": 0,
                     "initialize": "",
                     "finalize": "",
                     "libs": [],
-                    "x": 630,
+                    "x": 360,
                     "y": 40,
                     "wires": [
                         [
-                            "caf0d392f89d1280"
+                            "c42730aa7265eb52"
                         ]
                     ]
                 },
                 {
-                    "id": "caf0d392f89d1280",
+                    "id": "c42730aa7265eb52",
                     "type": "mqtt out",
-                    "z": "0760a039f0249b81",
+                    "z": "df27ead50a5bb1e9",
                     "name": "",
                     "topic": "",
                     "qos": "",
@@ -139,15 +100,15 @@ $(document).ready(function(e) {
                     "userProps": "",
                     "correl": "",
                     "expiry": "",
-                    "broker": "e463b8a540d2975c",
-                    "x": 850,
+                    "broker": "21097f5bbe68fc71",
+                    "x": 550,
                     "y": 40,
                     "wires": []
                 },
                 {
-                    "id": "e463b8a540d2975c",
+                    "id": "21097f5bbe68fc71",
                     "type": "mqtt-broker",
-                    "name": "",
+                    "name": "Meross Edge ",
                     "broker": "localhost",
                     "port": "1883",
                     "clientid": "",
@@ -171,9 +132,9 @@ $(document).ready(function(e) {
                     "userProps": "",
                     "sessionExpiry": ""
                 }
-            ]
+            ]        
         }
-        
+       
         $.ajax({
             type: "POST",
             url: "https://api.corrently.io/v2.0/tydids/bucket/intercom",

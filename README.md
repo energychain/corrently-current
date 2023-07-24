@@ -19,8 +19,6 @@ Corrently-Current is a quickly nailed-together *something* to collect and displa
 - Graphical editor for individual customization and expansion of functionality
 - Suitable for residential and commercial applications
 
-
-
 ## Audience
 
 Corrently Current caters to smart-home owners who are looking for a user-friendly and streamlined way to view the data from their smart-home devices. It appeals to users who desire quick and straightforward access to device data without dealing with complex control functions. Corrently Current is ideal for users who prefer an intuitively designed user interface and want to consolidate data from various devices and manufacturers into a single application.
@@ -47,7 +45,23 @@ $ npm run start:dev
 Open `./views/` in browser.
 
 ## Cloud Instance
-Open https://energychain.github.io/corrently-current/views/ in browser.
+Open https://current.corrently.cloud/ in browser.
 
-## Open Issues
-- File Upload is not working. Nicer solution? - Share public with PIN number protected?
+## Maintainer / Imprint
+
+<addr>
+STROMDAO GmbH  <br/>
+Gerhard Weiser Ring 29  <br/>
+69256 Mauer  <br/>
+Germany  <br/>
+  <br/>
++49 6226 968 009 0  <br/>
+  <br/>
+kontakt@stromdao.com  <br/>
+  <br/>
+Handelsregister: HRB 728691 (Amtsgericht Mannheim)
+</addr>
+
+
+## LICENSE
+[Apache-2.0](LICENSE)

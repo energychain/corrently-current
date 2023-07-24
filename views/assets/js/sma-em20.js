@@ -34,7 +34,7 @@ $(document).ready(function(e) {
         let settings = {};
 
 
-        settings['topics_edge'] = [
+        settings['topics'] = [
             {
                 "topic":"sma_em20/P_Bezug_momentan",
                 "alias":"W Bezug",

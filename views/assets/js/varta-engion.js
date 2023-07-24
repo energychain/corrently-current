@@ -34,18 +34,20 @@ $(document).ready(function(e) {
         let settings = {};
 
 
-        settings['topics_edge'] = [
+        settings['topics'] = [
             {
                 "topic":"varta_engion/SOC_GS",
                 "alias":"% Charged",
                 "id":_randomString(),
-                "colorize":"1"
+                "colorize":"1",
+                "connectionId":"edge"
             },
             {
                 "topic":"varta_engion/PSoll",
                 "alias":"W Soll",
                 "id":_randomString(),
-                "colorize":"1"
+                "colorize":"1",
+                "connectionId":"edge"
             }
         ];
         settings['edge_flow'] = {

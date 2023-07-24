@@ -62,7 +62,7 @@ class MQTTSource {
             setTimeout(function() {
                 if(!resolveable) {
                     console.error("Connection timeout for ",parent.connectSettings.connectionName);
-                reject("Connection Timeout");
+                    reject("Connection Timeout "+parent.connectSettings.host);
                 }
             },5000);
 

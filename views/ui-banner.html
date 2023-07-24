@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Corrently Current - Varta Home Storage Settings</title>
+    <title>Corrently Current - Banner</title>
     <meta name="theme-color" content="#00880e">
     <meta name="twitter:card" content="summary">
     <meta property="og:title" content="Corrently Current">
@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:description" content="Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface">
     <meta name="twitter:image" content="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
-    <meta name="description" content="Connect to Varta Engion (Home Storage) via Edge">
+    <meta name="description" content="Add a Banner to Corrently Current UI">
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e">
@@ -44,20 +44,18 @@
         </div>
     </nav>
     <div class="container border rounded shadow" id="ozContainer" style="margin-top: 150px;background: var(--bs-body-bg);padding-bottom: 15px;">
-        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-battery-charging" style="margin-right: 5px;">
-                <path d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"></path>
-                <path d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
-                <path d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2V6zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.405z"></path>
-                <path d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"></path>
-            </svg>SMA EnergyMeter (EM-20)</h1><small class="form-text">Connect to EM20 via Corrently Edge.</small>
+        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-display" style="margin-right: 5px;">
+                <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2V4zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145z"></path>
+            </svg>Banner</h1><small class="form-text">Adds a banner to Corrently Current UI</small>
         <form id="deviceSettings" style="margin-top: 15px;">
-            <div class="input-group"><span class="input-group-text">Broadcast Address</span><input class="form-control" type="text" id="deviceIP" required="" value="239.12.255.254"><button class="btn btn-secondary" type="submit">Connect</button></div>
+            <div class="input-group"><span class="input-group-text col-3">Title</span><input class="form-control" type="text" id="bannerTitle" required=""><button class="btn btn-secondary" type="submit">Add</button></div>
+            <div class="input-group" style="margin-top: 15px;"><span class="input-group-text col-3">Subtitle</span><input class="form-control" type="text" id="bannerSub"></div>
         </form>
     </div>
     <script src="assets/js/jquery.min.js?h=84e399b8f2181ccd73394fdeddff1638"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js?h=b4349cf7232e6b66621e089f2b9beee5"></script>
     <script src="assets/js/bs-init.js?h=f85385df9bc7fca4241bc1dbf53b9d61"></script>
-    <script src="assets/js/sma-em20.js?h=10b416987e411e9d1a0b4062fd4f6397"></script>
+    <script src="assets/js/ui-banner.js?h=ff857b5b982632746cf62283578c0b85"></script>
 </body>
 
 </html>

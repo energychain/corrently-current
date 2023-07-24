@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=fe7fdfec700d100dc745dc64d3600cb2">
     <link rel="manifest" href="manifest.json?h=28b0a1e01fc11297206846c45fc607e3">
-    <link rel="stylesheet" href="assets/css/styles.css?h=5ed84bd7390f7014cebb2d3496d846ae">
+    <link rel="stylesheet" href="assets/css/styles.css?h=ae22eef9e11b408b73f0fd8da31c9e1e">
     <link rel="stylesheet" href="assets/css/xToggle.css?h=945018c8dc94904db8213f199900caaf">
 </head>
 
@@ -54,10 +54,10 @@
         <hr>
         <div class="row">
             <div class="col-4 col-lg-4"></div>
-            <div class="col-4"><button class="btn btn-secondary w-100" id="btnRetrieve" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
+            <div class="col-4"><button class="btn btn-secondary disabled w-100" id="btnRetrieve" type="button" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
                         <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
                     </svg>&nbsp;<span class="d-none d-md-inline">Retrieve Stored Datapoints</span>&nbsp;&nbsp;</button></div>
-            <div class="col-4"><button class="btn btn-secondary w-100" id="btnStore" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
+            <div class="col-4"><button class="btn btn-secondary disabled w-100" id="btnStore" type="button" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
                         <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
                     </svg>&nbsp;<span class="d-none d-md-inline">Store Device Datapoints</span>&nbsp;&nbsp;</button></div>
         </div>
@@ -65,9 +65,10 @@
     <script src="assets/js/jquery.min.js?h=84e399b8f2181ccd73394fdeddff1638"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js?h=b4349cf7232e6b66621e089f2b9beee5"></script>
     <script src="assets/js/bs-init.js?h=f85385df9bc7fca4241bc1dbf53b9d61"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
     <script src="assets/js/androidjs.js?h=7e09a350584936670bab633993c7953a"></script>
-    <script src="assets/js/edge.js?h=61b321212b2c9e481bb1a19e4cd87e6a"></script>
+    <script src="assets/js/class_connection.js?h=b4b3388c39fdfd8d9c39fc1b5d8d61bd"></script>
+    <script src="assets/js/edge.js?h=f343b621427de6d0653a4b7ca17ece65"></script>
+    <script src="assets/js/class_bucket.js?h=237ae87a9c6fa499da47f81dc42594c9"></script>
 </body>
 
 </html>

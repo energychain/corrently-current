@@ -20,3 +20,7 @@ body.dragging, body.dragging * {
   cursor: grab;
 }
 
+.nav-link {
+  color: #147a50;
+}
+

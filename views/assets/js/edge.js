@@ -42,9 +42,10 @@ $(document).ready(function(e) {
         location.href="./index.html";
     });
 
-    $('#edgeSettings').on('submit',function(e) {
+    $('#edgeSettings').on('submit',async function(e) {
         e.preventDefault();
-        window.localStorage.setItem("connection_edge",JSON.stringify(
+        const connection = new Connection("edge");
+        await connection.set(
             {
                 "connectionName":"Corrently EDGE",
                 "host":$('#edgeHostname').val(),"port":1883,
@@ -55,7 +56,7 @@ $(document).ready(function(e) {
                 "connectionId":"edge",
                 "uiid":"current_edge",
                 "basePath":"#"
-            }));
+            });
         location.href= "./index.html";
     });
 });

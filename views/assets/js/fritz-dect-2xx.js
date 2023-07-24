@@ -33,7 +33,7 @@ $(document).ready(function(e) {
 
         let settings = {};
 
-        settings['topics_edge'] = [
+        settings['topics'] = [
             {
                 "topic":"avmfritz/"+$('#deviceIAIN').val()+"/power",
                 "alias":"W",
