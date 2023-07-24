@@ -27,14 +27,11 @@ const getUrlParameter = function getUrlParameter(sParam) {
     return false;
 };
 
-    let socketUrl = 'http://localhost:3000';
-    if(getUrlParameter('middleware') == 'cloud') {
+    let socketUrl = 'http://' + location.hostname +':3000';
+    if(location.hostname == 'current.corrently.cloud') {
         socketUrl = 'https://middleware.mqtt.corrently.cloud';
     }
-    if(getUrlParameter('middleware') == 'edge') {
-        socketUrl = 'http://' + location.hostname +':3000';
-    }
-    
+        
     let socket = io(socketUrl);
    
     listeners = {}

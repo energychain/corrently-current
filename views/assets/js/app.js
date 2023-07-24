@@ -306,8 +306,7 @@ const initControler = async function() {
                     await connection.connect();
                     activeConnections[key_id] = connection;
                     if(key_id == "cloud") {      
-                        connection.subscribe("corrently/users/"+cloudUser.username+"/corrently/edge/pm2",function(msg) {
-                           
+                        connection.subscribe("corrently/users/"+cloudUser.username+"/corrently/edge/pm2",function(msg) {                    
                             let edgeStats = JSON.parse(msg);
                             let html = '<table class="table table-condensed">';
                             html += '<tr><th>Name</th><th>PID</th><th>CPU</th><th>Memory</th></tr>';
