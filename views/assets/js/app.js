@@ -137,43 +137,34 @@ async function render(connectionId,dataPoint,payload) {
 }
 
 function populateConnectionList(selected_connection) {
-    $('#topicList').html('');
-    let html = '';
-    let hasSelected = false;
-    for (const [key, value] of Object.entries(window.localStorage)) {
-        const key_split = key.split('_');
-        if(key_split.length == 2) {
-            const key_type = key_split[0];
-            const key_id = key_split[1];
-            if(key_type == 'connection') {
-                const settings = JSON.parse(value);
-                let selected = '';
-                if((selected_connection == key_id)|| ((!hasSelected) && (typeof selected_connection == 'undefined'))) {
-                    selected = "selected";
-                    hasSelected = true;
-                    if(typeof settings.basePath !== 'undefined') {
-                        $('#nTopic').val(settings.basePath);
-                    } else {
-                        $('#nTopic').val('#');
-                    }
-                }
-                html += '<option value="'+key_id+'" '+selected+'>'+settings.connectionName+'</option>'; 
-            }
-        }
+    if(selected_connection == null) {
+        selected_connection = activeConnections["cloud"];
     }
 
+    $('#topicList').html('');
+    $('#nTopic').val('');
+
+    let html = '';
+    let hasSelected = false;
+    
+    for (const [key, value] of Object.entries(activeConnections)) {
+        let selected = '';
+        if(key == selected_connection) {
+            selected = 'selected';
+            hasSelected = true;
+        }
+        html += '<option value="'+key+'" '+selected+'>'+value.payload.connectionName+'</option>'; 
+    }
+   
     $('.connectionListForTopics').html(html);
     
     $('#discoverdTopics').html('');
     $('.noTopic').attr('disabled','disabled');
+    if($('#connectionListForTopics').val() !== null) {
+        const connection = activeConnections[$('#connectionListForTopics').val()];  
+        $('#nTopic').val(connection.payload.basePath);
+    }
 
-    const connection = new MQTTSource($('#connectionListForTopics').val());
-        
-    connection.connect().then(function(t) {
-        connection.subscribe('topicsDiscovery',function(msg) {
-            $('#discoverdTopics').append('<option>'+msg+'</option>');
-        });
-    });
     $('#connectionListForTopics').off();
     $('#connectionListForTopics').on('change',function() {
         populateConnectionList($(this).val());
@@ -208,12 +199,20 @@ const attachBindings = function() {
         icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
         icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
       });
+    let availConnections = '<option value="_new" selected>+ new connection</option>';;
+    for (const [key, value] of Object.entries(activeConnections)) {
+        availConnections += '<option value="'+key+'">'+value.payload.connectionName+'</option>';
+    }
     $('#availConnections').html(availConnections);
     $('#availConnections').off();
     $('#availConnections').on('change',function(e) {
-        const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+$(e.currentTarget).val()));
-        for (const [key, value] of Object.entries(connectionSettings)) {
-            $('#mqtt_'+key).val(value);
+        const connectionSettings = JSON.parse(window.localStorage.getItem("connect_"+$(e.currentTarget).val()));
+        if(connectionSettings == null) {
+             $('.mqttConSet').val('');
+        } else {
+            for (const [key, value] of Object.entries(connectionSettings)) {
+                $('#mqtt_'+key).val(value);
+            }
         }
     });
     $('.saveTopic').off();
@@ -255,7 +254,6 @@ const attachBindings = function() {
         $('#exportSettings').modal('show')
         console.log(shareable);
     })
-    console.log("Bindings Attached");
     sortability();
 }
 
@@ -336,15 +334,17 @@ const initControler = async function() {
                     console.error("Connection Error",e);
                     if(key_id == "cloud") {
                         console.log("ReAuthenticating Cloud");
-                        $.ajax({
-                            type: "POST",
-                            url: "https://integration.corrently.io/node-red/reAuthenticate",
-                            data: "&username=" + encodeURIComponent(cloudUser.username)+"&password=" + encodeURIComponent(cloudUser.password),
-                            success: function(data) {
-                                console.log("Success",data);
-                                setTimeout(initControler,1000);
-                            }
-                        });
+                        if(typeof cloudUser.password !== 'undefined') {
+                            $.ajax({
+                                type: "POST",
+                                url: "https://integration.corrently.io/node-red/reAuthenticate",
+                                data: "&username=" + encodeURIComponent(cloudUser.username)+"&password=" + encodeURIComponent(cloudUser.password),
+                                success: function(data) {
+                                    console.log("Success",data);
+                                    setTimeout(initControler,1000);
+                                }
+                            });
+                        }
                     } 
                      else {
                         console.error(e);
@@ -454,15 +454,22 @@ $(document).ready(async function() {
                     front.send("/corrently/edge/add-flow",JSON.stringify(value));
                 }
             } else {
-                if(key == 'profile'){
+                if(key == 'app'){
                     const profile = new Profile();
                     await profile.set(value);
-                    console.log("Import Profile",profile);
+                    console.log("Import Profile",value);
                 }
                 if(key == 'topics') {
                     for(let i=0;i<value.length;i++) {
                         const topic = new Topic(_randomString());
                         await topic.set(value[i]);
+                    }
+                }
+                if(key == 'connections') {
+                    console.log("Import Connections");
+                    for(let i=0;i<value.length;i++) {
+                        const connection = new Connection();
+                        await connection.set(value[i]);
                     }
                 }
             }
@@ -493,22 +500,28 @@ $(document).ready(async function() {
         return false;
     };
 
-    if(!window.localStorage.getItem("corrently_cloud_user")) {
+    if((typeof window.localStorage.getItem("corrently_cloud_user") == 'undefined')||(window.localStorage.getItem("corrently_cloud_user") == null)) {
         $.getJSON("https://integration.corrently.io/node-red/createUser",function(d) {
             window.localStorage.setItem("corrently_cloud_user",JSON.stringify(d));
             location.reload();
         });
     }
     let p_data = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
-    profile = new Profile(p_data.username);
-    await profile.get();
-  
+    profile = new Profile();
+   
     profile.payload.corrently_cloud_user = p_data;
     profile.payload.order = JSON.parse(window.localStorage.getItem("order"));
     
-    if(typeof profile.payload.bucketId == 'undefined') {
+    if((typeof window.localStorage.getItem("profile") == 'undefined')||(window.localStorage.getItem("profile") == null)) {
         await profile.set();
+    } else {
+        let p = JSON.parse(window.localStorage.getItem("profile"));
+        window.localStorage.setItem("corrently_cloud_user",JSON.stringify({
+            username:p.corrently_cloud_user.username,
+            password:p.corrently_cloud_user.password
+        })); 
     }
+   
 
     let middleware = 'app';
     $('#edgeContainer').hide();
@@ -516,15 +529,6 @@ $(document).ready(async function() {
     if(getUrlParameter('middleware')) {
         middleware = getUrlParameter('middleware');
     }
-    /*
-    if(middleware !== 'cloud') {
-        setInterval(function() {
-            if(!front.socket.connected) {
-            location.href='?middleware=cloud';
-            }
-        },2000);    
-    }
-    */
 
     let html = '';
     if(window.localStorage.getItem("connect_edge")) {
@@ -582,18 +586,17 @@ $(document).ready(async function() {
 
     $('#btnAddTopic').on('click',function(e) {
         $('#btnAddTopic').attr('disabled','disabled');
-
+        
         const connectionId = $('#connectionListForTopics').val();
         const topic = $('#nTopic').val();
-        const connection = new MQTTSource(connectionId);
+        const connection = activeConnections[connectionId];
         
         connection.connect().then(function(t) {
             connection.subscribe(topic,function(msg) {     });
             connection.subscribe(topic+'#',function(msg) {   });
-            connection.subscribe('topicsDiscovery',function(msg) {
-                let nice_topic = msg; 
-                const connectionSettings = JSON.parse(window.localStorage.getItem("connection_"+connectionId));
-                let basePath = connectionSettings.basePath;
+            connection.subscribe('topicsDiscovery',async function(msg) {
+                let nice_topic = msg;
+                let basePath = connection.payload.basePath.replace(/#/g, '');
                 nice_topic = nice_topic.replace(basePath,'./');
                 $('#discoverdTopics').append('<option value="'+msg+'">'+nice_topic+'</option>');
             });
@@ -672,10 +675,10 @@ $(document).ready(async function() {
     $('#removeConnection').off();
     $('#removeConnection').on('click',function(e) {
         const selectedConnection =  $('#availConnections').val();
-        window.localStorage.removeItem("connection_"+selectedConnection);
+        window.localStorage.removeItem("connect_"+selectedConnection);
         location.reload();
     });
-    $("#mqttConnectionSettings").on("submit", function (e) {
+    $("#mqttConnectionSettings").on("submit", async function (e) {
         e.preventDefault();
         $('#connectionAlert').hide();
         $('#btnTestSettings').attr('disabled','disabled');
@@ -686,43 +689,34 @@ $(document).ready(async function() {
         settings.port = settings.port * 1;
 
         if(typeof settings.protocolVersion !== 'undefined') settings.protocolVersion = settings.protocolVersion  * 1;
-        console.log(settings.availConnections);
 
         const selectedConnection =  settings.availConnections;
         delete settings.availConnections;
 
         if(selectedConnection !== '_new') {
-            settings.uiid = selectedConnection;
-            settings.connectionId = selectedConnection;
-            window.localStorage.setItem("connection_"+selectedConnection,JSON.stringify(settings));
+            const connection = activeConnections[selectedConnection];
+            console.log("Out For Set Call",selectedConnection);
+            await connection.set(settings);
             $('#mqttConnection').modal('hide');
-            populateConnectionList(selectedConnection);
+            window.localStorage.removeItem("connect_"+selectedConnection);
+            delete activeConnections[selectedConnection];
+            activeConnections[connection.connetionId]=connection 
+            populateConnectionList(connection.connetionId);
             if(typeof settings.basePath !== 'undefined') {
                 $('#nTopic').val(settings.basePath);
             }
             $('#mqttTopics').modal('show');
-        } else {
-           
-            const connection = new MQTTSource(settings);
+        } else {       
+            const connection = new Connection();
+            await connection.set(settings);
             connection.connect().then(function(t) {
                 $('#connectionAlert').hide();
-                console.log("connected",connection.getConnectionId());
-                $('#btnTestSettings').attr('data-connection',connection.getConnectionId());
+                $('#btnTestSettings').attr('data-connection',connection.connetionId);
                 $('#btnTestSettings').removeAttr('disabled');
-              
                 $('#mqttConnection').modal('hide');
-               
-                if(typeof settings !== 'object') {
-                    populateConnectionList(connection.getConnectionId());
-                } else {
-                    populateConnectionList(settings);
-                }
-              
-                //populateConnectionList();
-    
+                activeConnections[connection.connetionId] = connection;
+                populateConnectionList(connection.connetionId);
                 $('#mqttTopics').modal('show');
-    
-                
             }).catch(function(ex) {
                 console.error(ex);
                 $('#connectionAlert').show();
@@ -751,7 +745,7 @@ $(document).ready(async function() {
         e.preventDefault();
         let bridgeConf = activeConnections["cloud"];
         bridgeConf.enabled = $('#statusBridge').attr('data-checked');
-        bridgeConf.edge = JSON.parse(window.localStorage.getItem("connection_edge"));
+        bridgeConf.edge = JSON.parse(window.localStorage.getItem("connect_edge"));
         front.send("/corrently/mqtt/bridge",JSON.stringify(bridgeConf));
         $('#bridgeSettings').modal('hide');
     });

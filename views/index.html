@@ -105,9 +105,9 @@
                     <div class="modal-body" style="background: var(--bs-body-bg);">
                         <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Connection</span><select class="form-select" id="availConnections" required="" name="availConnections"></select></div><small class="form-text" style="margin-bottom: 15px;margin-top: 15px;">MQTT Broker Connections are established using MQTT.js. Documentation is available <a href="https://github.com/mqttjs/MQTT.js#client" target="_blank">here</a>.</small>
                         <div class="alert alert-danger" role="alert" id="connectionAlert" style="display:none"></div>
-                        <div class="input-group" style="margin-bottom: 15px;margin-top: 15px;"><span class="input-group-text w-25">Name</span><input class="form-control" type="text" id="mqtt_connectionName" name="connectionName" required="" maxlength="255" minlength="1" placeholder="(Name of this connection)"></div>
-                        <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Host</span><input class="form-control" type="text" id="mqtt_host" name="host" required="" maxlength="255" minlength="3" placeholder="(MQTT Broker IP or hostname)" value="test.mosquitto.org"></div>
-                        <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Port</span><input class="form-control" type="number" id="mqtt_port" name="port" value="1883" min="1024" max="32000" step="1"></div>
+                        <div class="input-group" style="margin-bottom: 15px;margin-top: 15px;"><span class="input-group-text w-25">Name</span><input class="form-control mqttConSet" type="text" id="mqtt_connectionName" name="connectionName" required="" maxlength="255" minlength="1" placeholder="(Name of this connection)"></div>
+                        <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Host</span><input class="form-control mqttConSet" type="text" id="mqtt_host" name="host" required="" maxlength="255" minlength="3" placeholder="(MQTT Broker IP or hostname)" value="test.mosquitto.org"></div>
+                        <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Port</span><input class="form-control mqttConSet" type="number" id="mqtt_port" name="port" value="1883" min="1024" max="32000" step="1"></div>
                         <div class="input-group" style="margin-bottom: 15px;"><span class="input-group-text w-25">Protocol</span><select class="form-select" id="mqtt_protocol" name="protocol">
                                 <option value="mqtt" selected="">mqtt</option>
                                 <option value="mqtts">mqtts</option>
@@ -133,9 +133,9 @@
                     <div class="modal-footer" style="background: var(--bs-body-bg);"><button class="btn btn-danger" id="removeConnection" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash">
                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
-                            </svg>&nbsp;</button><button class="btn btn-secondary" id="btnTestSettings" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
-                                <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
-                            </svg>&nbsp;Datapoints</button></div>
+                            </svg>&nbsp;</button><button class="btn btn-secondary" id="btnTestSettings" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-save">
+                                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"></path>
+                            </svg>&nbsp;Save</button></div>
                 </form>
             </div>
         </div>
@@ -299,14 +299,14 @@
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=9a5e8485c03f6a60f14c5a42382a8324"></script>
     <script src="assets/js/jquery-ui.js?h=b542085c030c4b1c7fd31775d9419ae2"></script>
-    <script src="assets/js/class_mqttsource.js?h=728ad6bd5c83697bca827abcf2cf42a9"></script>
-    <script src="assets/js/class_topic.js?h=27077068da9dcbc770c5f3ae50159815"></script>
-    <script src="assets/js/class_connection.js?h=b4b3388c39fdfd8d9c39fc1b5d8d61bd"></script>
-    <script src="assets/js/class_appprofile.js?h=4fd10ab24c01917a54db3102fdd37394"></script>
-    <script src="assets/js/app.js?h=e83e86a5e94800572e273170ae3cd6ae"></script>
+    <script src="assets/js/class_mqttsource.js?h=0c1c88068efdd40ecdb0fe995d681f4e"></script>
+    <script src="assets/js/class_topic.js?h=d05b080e202fd21ee85cd4360a85ee89"></script>
+    <script src="assets/js/class_connection.js?h=c8a370b19763a45c6733a5b2902cdbbd"></script>
+    <script src="assets/js/class_appprofile.js?h=7f50270260a5de97f665ade0ede90a51"></script>
+    <script src="assets/js/app.js?h=7477ed35bf3c9d52b4b06ceaa4349512"></script>
     <script src="assets/js/html5qr.js?h=d88d3200cb547c9e86ee972975561dcd"></script>
     <script src="assets/js/xToggle-Toggle.js?h=df39a314906b5fd765ecda7925a46126"></script>
-    <script src="assets/js/class_bucket.js?h=237ae87a9c6fa499da47f81dc42594c9"></script>
+    <script src="assets/js/class_bucket.js?h=80b078d78194e044df891605e969c3b5"></script>
 </body>
 
 </html>

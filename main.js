@@ -17,6 +17,7 @@ const _randomString = function() {
 
 let mqttsessions = {};
 let edgesession = null;
+let msgStore = {};
 
 let uuids = {};
 
@@ -62,7 +63,7 @@ back.on("/corrently/edge/add-flow",function(msg) {
 
 back.on("/corrently/mqtt/connect",function(msg) {
    try {
-        let msgStore = {};
+   
         back.on("/corrently/mqtt/empty",function(msg) {
             msgStore = {};
         });
@@ -103,12 +104,17 @@ back.on("/corrently/mqtt/connect",function(msg) {
                 back.send("/corrently/mqtt/connected",JSON.stringify({sessionId:sessionId,status:"connected",uiid:_connectionOptions.uiid}));
 
                 back.on('/corrently/mqtt/'+sessionId+'/subscribe',function(msg) {
+                    if(typeof msgStore[msg] !== 'undefined') { 
+                        back.send('/corrently/mqtt/'+sessionId+'/'+msg,msgStore[msg]);  
+                    }
 
                     mqttclient.subscribe(msg,function(err,msg2) {
                         if(err) {
                             back.send("/corrently/error","Session "+sessionId+" subsribe error "+err+" topic "+msg);  
                             back.send("/corrently/console","Session "+sessionId+" subsribe error "+err+" topic "+msg); 
-                        } else back.send("/corrently/console","Session "+sessionId+" subsribed to "+msg);
+                        } else {
+                            back.send("/corrently/console","Session "+sessionId+" subsribed to "+msg);
+                        }
                     });
                     mqttclient.on('message', (topic, payload) => {
                         payload = payload.toString();

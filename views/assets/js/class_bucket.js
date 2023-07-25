@@ -6,7 +6,6 @@ class Bucket {
      * @return {Promise} A Promise that resolves to the retrieved bucket.
      */
     retrieveBucket(bucketId) {
-            console.log("retrieveBucket",bucketId);
             return new Promise(function(resolve,reject) {
                 $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+bucketId,function(data) {
                     if((typeof data.val == 'undefined')||(data.val == 'undefined')) {
@@ -26,7 +25,6 @@ class Bucket {
      * @return {Promise} A promise that resolves with the ID of the stored bucket.
      */
     storeBucket(node) {
-        console.log("storeBucket",node);
             return new Promise(function(resolve) {
                 $.ajax({
                     type: "POST",

@@ -37,9 +37,7 @@ const monitorSessionConnection = function(sessionId,parent) {
 class MQTTSource {
     
     constructor(connectSettings) {
-        if(typeof connectSettings !== 'object') {
-            connectSettings = JSON.parse(window.localStorage.getItem('connection_'+connectSettings));
-        }
+       
         if(typeof connectSettings.connectionId == 'undefined') {
             connectSettings.connectionId = _randomString();
         }
@@ -76,7 +74,6 @@ class MQTTSource {
                     monitorSessionConnection(sessionInfo.sessionId,parent);
                     parent.sessionId = sessionInfo.sessionId;
                     parent.connected = true;
-                    window.localStorage.setItem('connection_'+parent.connectSettings.connectionId,JSON.stringify(parent.connectSettings));
                     resolveable = true;
                     resolve(parent.connectSettings.connectionId);
                 }

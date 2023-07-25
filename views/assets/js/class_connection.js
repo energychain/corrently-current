@@ -55,6 +55,13 @@ class Connection {
         delete payload.connetionId;
         delete payload.cached;
         this.payload = payload;
+        if(typeof this.payload == "string") {
+            this.payload = await this.bucket.retrieveBucket(this.payload);
+        }
+        this.connetionId = this.payload.connectionId;
+        if(typeof this.connetionId == 'undefined') {
+            this.connetionId = _randomString();
+        }
         this.payload.bucketId = await this.bucket.storeBucket(this);
         window.localStorage.setItem('connect_'+this.connetionId,JSON.stringify(this.payload));
     }

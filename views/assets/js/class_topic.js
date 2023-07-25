@@ -50,6 +50,9 @@ class Topic {
         delete payload.id;
         delete payload.cached;
         this.payload = payload;
+        if(typeof this.payload == "string") {
+            this.payload = await this.bucket.retrieveBucket(this.payload);
+        }
         this.payload.bucketId = await this.bucket.storeBucket(this);
         window.localStorage.setItem('topic_'+this.id,JSON.stringify(this.payload));
     }
