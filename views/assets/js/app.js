@@ -516,10 +516,12 @@ $(document).ready(async function() {
         await profile.set();
     } else {
         let p = JSON.parse(window.localStorage.getItem("profile"));
-        window.localStorage.setItem("corrently_cloud_user",JSON.stringify({
-            username:p.corrently_cloud_user.username,
-            password:p.corrently_cloud_user.password
-        })); 
+        if(p.corrently_cloud_user !== null) {
+            window.localStorage.setItem("corrently_cloud_user",JSON.stringify({
+                username:p.corrently_cloud_user.username,
+                password:p.corrently_cloud_user.password
+            })); 
+        }
     }
    
 
