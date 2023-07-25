@@ -434,6 +434,8 @@ $(document).ready(async function() {
      * If the 'import' URL parameter is present, it redirects to the index page, otherwise it reloads the current page.
      */
     const applyImport = async function() {
+        $('#btnApplyImport').attr('disabled','disabled');
+        $('#btnApplyImport').html('working...');
         let importJSON = JSON.parse($('#txtImport').val());
         for (const [key, value] of Object.entries(importJSON)) {
             const key_split = key.split('_');
@@ -457,6 +459,12 @@ $(document).ready(async function() {
                 if(key == 'app'){
                     const profile = new Profile();
                     await profile.set(value);
+                    window.localStorage.setItem("profile",JSON.stringify(value));
+                    window.localStorage.setItem("corrently_cloud_user",JSON.stringify({
+                        username:value.corrently_cloud_user.username,
+                        password:value.corrently_cloud_user.password
+                    }));
+                    window.localStorage.setItem("order",JSON.stringify(value.order));
                     console.log("Import Profile",value);
                 }
                 if(key == 'topics') {
@@ -480,7 +488,6 @@ $(document).ready(async function() {
         } else {
             location.reload();
         }
-
     }
 
     
@@ -753,7 +760,7 @@ $(document).ready(async function() {
     });
 
   
-    $('#btnShareCurrent').on('click',function(e) {
+    $('#btnShareCurrent').on('click',async function(e) {
         let ntopics = [];
         let nconnections = [];
 
@@ -763,7 +770,13 @@ $(document).ready(async function() {
         for (const [key, value] of Object.entries(activeConnections)) {
             nconnections.push(value.payload.bucketId);
         }
+        
+        profile = new Profile();
+   
+        profile.payload.corrently_cloud_user = p_data;
+        profile.payload.order = JSON.parse(window.localStorage.getItem("order"));
 
+        await profile.set();
 
         let shareable = {
             topics:ntopics,
