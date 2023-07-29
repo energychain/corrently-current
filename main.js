@@ -36,6 +36,20 @@ back.on("/corrently/mqtt/bridge",function(msg) {
     }
 });
 
+back.on("/corrently/timedb/cloud",function(msg) {
+    try {
+        let config = JSON.parse(msg);
+        // TODO: Care about activation Flag
+        const mqttclient = mqtt.connect("mqtt://"+config.edge.host+":1883");
+        mqttclient.on('connect', () => {
+            console.log("Connected to Edge for TimeDB Setup");
+            mqttclient.publish('corrently/timedb/connect', msg);
+        });
+    } catch(e) {
+        console.error('/corrently/timedb/cloud',e);
+    }
+});
+
 back.on("/corrently/edge/topics/set",function(msg) {
     edgesession.publish('corrently/edge/topics/set',msg);
 });
@@ -57,7 +71,7 @@ back.on("/corrently/edge/topics/get",function(msg) {
 
 
 back.on("/corrently/edge/add-flow",function(msg) {
-    // TODO Listen to Response via ./get 
+    console.log("Deploy to Edge (NR)");
     edgesession.publish('corrently/edge/nr-add-flow/set',msg);
 });
 
@@ -102,6 +116,15 @@ back.on("/corrently/mqtt/connect",function(msg) {
                 }
 
                 back.send("/corrently/mqtt/connected",JSON.stringify({sessionId:sessionId,status:"connected",uiid:_connectionOptions.uiid}));
+
+                back.on('/corrently/mqtt/'+sessionId+'/publish',function(msg) {
+                    try {
+                           let json = JSON.parse(msg);
+                           mqttclient.publish(json.topic,json.payload,{retain:true});                           
+                    } catch(e) {
+                        console.error('Publish Error',e);
+                    }
+                });
 
                 back.on('/corrently/mqtt/'+sessionId+'/subscribe',function(msg) {
                     if(typeof msgStore[msg] !== 'undefined') { 

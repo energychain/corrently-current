@@ -104,4 +104,8 @@ class Connection {
              this._connection.subscribe(topic,callback);
         }    
     }
+    publish(topic,payload) {
+        console.log("Connect Publish",topic);
+        this._connection.publish(topic,payload);
+    }
 }

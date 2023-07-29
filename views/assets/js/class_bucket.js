@@ -7,15 +7,23 @@ class Bucket {
      */
     retrieveBucket(bucketId) {
             return new Promise(function(resolve,reject) {
-                $.getJSON("https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+bucketId,function(data) {
-                    if((typeof data.val == 'undefined')||(data.val == 'undefined')) {
-                        reject("Bucket not found");
-                    } else {
-                        data.val = JSON.parse(data.val);
-                        data.val._cached = new Date().getTime();
-                        resolve(data.val);
+                const profile = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
+                $.ajax({
+                    beforeSend: function(request) {
+                        request.setRequestHeader("x-account", profile.username);
+                    },
+                    dataType: "json",
+                    url:"https://api.corrently.io/v2.0/tydids/bucket/intercom?id="+bucketId,
+                    success: function(data) {
+                        if((typeof data.val == 'undefined')||(data.val == 'undefined')) {
+                            reject("Bucket not found");
+                        } else {
+                            data.val = JSON.parse(data.val);
+                            data.val._cached = new Date().getTime();
+                            resolve(data.val);
+                        }
                     }
-                })
+                });
             });
         }
     
@@ -26,8 +34,12 @@ class Bucket {
      */
     storeBucket(node) {
             return new Promise(function(resolve) {
+                const profile = JSON.parse(window.localStorage.getItem("corrently_cloud_user"));
                 $.ajax({
                     type: "POST",
+                    beforeSend: function(request) {
+                        request.setRequestHeader("x-account", profile.username);
+                    },
                     url: "https://api.corrently.io/v2.0/tydids/bucket/intercom",
                     data: "&value=" + encodeURIComponent(JSON.stringify(node.payload)),
                     success: function(data) {

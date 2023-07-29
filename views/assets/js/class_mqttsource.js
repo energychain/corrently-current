@@ -110,4 +110,13 @@ class MQTTSource {
         front.on('/corrently/mqtt/'+this.sessionId+'/'+topic,callback);
         front.send('/corrently/mqtt/'+this.sessionId+'/subscribe',topic);
     }
+    publish(topic,msg) {
+        console.log("Publish",topic);
+        if(!this.connected) throw "MQTTSource is not in connected state.";
+        front.send('/corrently/mqtt/'+this.sessionId+'/publish',JSON.stringify({
+            topic:topic,
+            payload:msg
+        }));
+       
+    }
 }

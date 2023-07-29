@@ -177,6 +177,7 @@
                                             </optgroup>
                                             <optgroup label="EDGE Devices">
                                                 <option value="./fritz-dect-2xx.html">AVM Fritz DECT 2xx (Smart Plug)</option>
+                                                <option value="./timedb.html">InfluxDB / TimeDB</option>
                                                 <option value="./deye-inverter.html">DEYE Microinverter</option>
                                                 <option value="./discovergy.html">Discovergy Meter</option>
                                                 <option value="./sma-em20.html">SMA Energy Meter (EM20)</option>
@@ -234,10 +235,7 @@
                     <div class="input-group"><span class="input-group-text">Share Code</span><input class="form-control" type="text" id="shareId"></div>
                 </div>
                 <p class="text-center"><strong>Caution</strong>: Contains security credentials!</p>
-                <div class="modal-footer"><button class="btn btn-secondary" id="btnShareSettings" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-box-arrow-right">
-                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"></path>
-                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"></path>
-                        </svg>&nbsp; Settings Code</button><button class="btn btn-secondary" id="btnDownloadSettings" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-download">
+                <div class="modal-footer"><button class="btn btn-secondary" id="btnDownloadSettings" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-download">
                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
                             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"></path>
                         </svg>&nbsp;Download JSON</button></div>
@@ -258,7 +256,12 @@
                         </select><label class="form-label"><strong>Basepath (on Bridge)</strong></label>
                         <div class="input-group"><input class="form-control" type="text" id="basepath" name="basepath" placeholder="(Will relay from edge topic to basepath/topic on bridge)" required="" disabled=""></div>
                     </div>
-                    <div class="modal-footer"><button class="btn btn-secondary" type="submit">Save</button></div>
+                    <div class="modal-footer"><button class="btn btn-secondary" id="exportSettingsToCloud" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-gear-wide-connected" style="margin-right: 5px;">
+                                <path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434l.071-.286zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5zm0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78h4.723zM5.048 3.967c-.03.021-.058.043-.087.065l.087-.065zm-.431.355A4.984 4.984 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8 4.617 4.322zm.344 7.646.087.065-.087-.065z"></path>
+                            </svg>Sync Datapoints</button><button class="btn btn-secondary" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-cloud-upload" style="margin-right: 5px;">
+                                <path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"></path>
+                                <path fill-rule="evenodd" d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3z"></path>
+                            </svg>Save</button></div>
                 </form>
             </div>
         </div>
@@ -299,14 +302,14 @@
     <script src="assets/js/JSONPath.js?h=05424ddbfdbf438e0f221b5d3b03ebc7"></script>
     <script src="assets/js/androidjs.js?h=9a5e8485c03f6a60f14c5a42382a8324"></script>
     <script src="assets/js/jquery-ui.js?h=b542085c030c4b1c7fd31775d9419ae2"></script>
-    <script src="assets/js/class_mqttsource.js?h=0c1c88068efdd40ecdb0fe995d681f4e"></script>
+    <script src="assets/js/class_mqttsource.js?h=6e3108c5965d4b00aece07279f9878a9"></script>
     <script src="assets/js/class_topic.js?h=d05b080e202fd21ee85cd4360a85ee89"></script>
-    <script src="assets/js/class_connection.js?h=c8a370b19763a45c6733a5b2902cdbbd"></script>
+    <script src="assets/js/class_connection.js?h=7ce398453924ed94e82d38f6a92272a1"></script>
     <script src="assets/js/class_appprofile.js?h=7f50270260a5de97f665ade0ede90a51"></script>
-    <script src="assets/js/app.js?h=ff654794f01ab3da36be09cf175329bc"></script>
+    <script src="assets/js/app.js?h=60bef74e0bfc0e562445946cc6975a21"></script>
     <script src="assets/js/html5qr.js?h=d88d3200cb547c9e86ee972975561dcd"></script>
     <script src="assets/js/xToggle-Toggle.js?h=df39a314906b5fd765ecda7925a46126"></script>
-    <script src="assets/js/class_bucket.js?h=80b078d78194e044df891605e969c3b5"></script>
+    <script src="assets/js/class_bucket.js?h=6d7574a754c28e876fda523317b7dd42"></script>
 </body>
 
 </html>

@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Corrently Current - MQTT Connection Settings</title>
+    <title>Corrently Current - Use TimeDB/InfluxDB for persistant storage</title>
     <meta name="theme-color" content="#00880e">
     <meta name="twitter:card" content="summary">
     <meta property="og:title" content="Corrently Current">
     <meta property="og:image" content="assets/img/corrently-logo.webp?h=1097915e26a69ed47314de449e2aa88a">
-    <meta name="description" content="Light EMS to run via Smartphones">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Corrently-Current is a quickly nailed-together something to collect and display energy data in a horrible mobile user interface">
     <meta name="twitter:image" content="assets/img/corrently-current.png?h=1d3fe3be65b3e736d243daf4b46e5ac1">
+    <meta name="description" content="Use TimeDB/InfluxDB for persistant storage">
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="180x180" href="assets/img/corrently-current_180x180.png?h=eac7c8a235716b7a7ff7803f1131739f">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/img/corrently-current_192x192.png?h=db01a6d8e7d4f2a2126cd6cb24be531e">
@@ -44,31 +44,23 @@
         </div>
     </nav>
     <div class="container border rounded shadow" id="ozContainer" style="margin-top: 150px;background: var(--bs-body-bg);padding-bottom: 15px;">
-        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-hdd-network" style="margin-right: 5px;">
-                <path d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM3 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>
-                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2V4zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5z"></path>
-            </svg>Corrently EDGE</h1><small class="form-text"><a href="https://github.com/energychain/corrently-edge">Corrently Edge</a> is a light weight MQTT Broker with a Node-RED based editor. It might be used to collect datapoints from local devices.&nbsp;</small>
-        <form id="edgeSettings" style="margin-top: 15px;">
-            <div class="input-group"><span class="input-group-text">Hostname/IP</span><input class="form-control" type="text" id="edgeHostname" required=""><button class="btn btn-secondary" type="submit">Connect</button></div>
+        <h1 class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-database-fill" style="margin-right: 5px;">
+                <path d="M3.904 1.777C4.978 1.289 6.427 1 8 1s3.022.289 4.096.777C13.125 2.245 14 2.993 14 4s-.875 1.755-1.904 2.223C11.022 6.711 9.573 7 8 7s-3.022-.289-4.096-.777C2.875 5.755 2 5.007 2 4s.875-1.755 1.904-2.223Z"></path>
+                <path d="M2 6.161V7c0 1.007.875 1.755 1.904 2.223C4.978 9.71 6.427 10 8 10s3.022-.289 4.096-.777C13.125 8.755 14 8.007 14 7v-.839c-.457.432-1.004.751-1.49.972C11.278 7.693 9.682 8 8 8s-3.278-.307-4.51-.867c-.486-.22-1.033-.54-1.49-.972Z"></path>
+                <path d="M2 9.161V10c0 1.007.875 1.755 1.904 2.223C4.978 12.711 6.427 13 8 13s3.022-.289 4.096-.777C13.125 11.755 14 11.007 14 10v-.839c-.457.432-1.004.751-1.49.972-1.232.56-2.828.867-4.51.867s-3.278-.307-4.51-.867c-.486-.22-1.033-.54-1.49-.972Z"></path>
+                <path d="M2 12.161V13c0 1.007.875 1.755 1.904 2.223C4.978 15.711 6.427 16 8 16s3.022-.289 4.096-.777C13.125 14.755 14 14.007 14 13v-.839c-.457.432-1.004.751-1.49.972-1.232.56-2.828.867-4.51.867s-3.278-.307-4.51-.867c-.486-.22-1.033-.54-1.49-.972Z"></path>
+            </svg>Influx DB - TimeDB</h1><small class="form-text">Persists current values from cloud to a timeseries database on the edge.</small>
+        <form id="deviceSettings" style="margin-top: 15px;">
+            <div class="input-group"><span class="input-group-text col-3">Connect URL</span><input class="form-control" type="text" id="deviceIP" required="" value="http://localhost:8086"></div>
+            <div class="input-group" style="margin-top: 15px;"><span class="input-group-text col-3">Username</span><input class="form-control" type="text" id="deviceUser" required="" disabled=""></div>
+            <div class="input-group" style="margin-top: 15px;"><span class="input-group-text col-3">Password</span><input class="form-control" type="password" id="devicePassword" required="" disabled=""></div>
+            <div class="input-group" style="margin-top: 15px;"><span class="input-group-text col-3">Database</span><input class="form-control" type="text" id="deviceIDB" required=""><button class="btn btn-secondary" type="submit">Connect</button></div>
         </form>
-        <hr>
-        <div class="row">
-            <div class="col-4 col-lg-4"></div>
-            <div class="col-4"><button class="btn btn-secondary disabled w-100" id="btnRetrieve" type="button" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
-                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
-                    </svg>&nbsp;<span class="d-none d-md-inline">Retrieve Stored Datapoints</span>&nbsp;&nbsp;</button></div>
-            <div class="col-4"><button class="btn btn-secondary disabled w-100" id="btnStore" type="button" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ui-checks">
-                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
-                    </svg>&nbsp;<span class="d-none d-md-inline">Store Device Datapoints</span>&nbsp;&nbsp;</button></div>
-        </div>
     </div>
     <script src="assets/js/jquery.min.js?h=84e399b8f2181ccd73394fdeddff1638"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js?h=b4349cf7232e6b66621e089f2b9beee5"></script>
     <script src="assets/js/bs-init.js?h=f85385df9bc7fca4241bc1dbf53b9d61"></script>
-    <script src="assets/js/androidjs.js?h=9a5e8485c03f6a60f14c5a42382a8324"></script>
-    <script src="assets/js/class_connection.js?h=7ce398453924ed94e82d38f6a92272a1"></script>
-    <script src="assets/js/edge.js?h=f343b621427de6d0653a4b7ca17ece65"></script>
-    <script src="assets/js/class_bucket.js?h=6d7574a754c28e876fda523317b7dd42"></script>
+    <script src="assets/js/timedb.js?h=ae13b9c3fb30d4dfb2a9064d30d3309d"></script>
 </body>
 
 </html>

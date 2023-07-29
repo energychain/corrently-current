@@ -93,7 +93,6 @@ async function render(connectionId,dataPoint,payload) {
                         displayValue = (''+payload).substring(0,$(elements[i]).attr('corrently-maxlength')) + '...';
                     }
                 }
-                $(elements[i]).attr('title',org_payload);
                 $(elements[i]).html(displayValue);
             }
             if(!isNaN(old_value) && !isNaN(displayValue)) {
@@ -129,6 +128,7 @@ async function render(connectionId,dataPoint,payload) {
                     },3000);
                 }
             } 
+            $(elements[i]).attr('title',new Date().toLocaleTimeString());
 
         } catch(e) {
             console.error(e);
@@ -170,6 +170,28 @@ function populateConnectionList(selected_connection) {
         populateConnectionList($(this).val());
     })
     $('#btnSaveTopics').attr('disabled','disabled');
+}
+
+/**
+ * Synchronizes UI topics (datapoints) to cloud
+ *
+ * @param {Event} e - the event object
+ * @return {void} 
+ */
+const syncCloudTopics = function(e) {
+    let topics = {}
+    for (const [key, value] of Object.entries(window.localStorage)) {
+        const key_split = key.split('_');
+        let migration=false;
+        if(key_split.length == 2) {
+            const key_type = key_split[0];
+            const key_id = key_split[1];
+            if(key_type == 'topic') {
+                topics[key] = JSON.parse(value);
+            }
+        }
+    }
+    activeConnections["cloud"].publish(activeConnections["cloud"].payload.basePath.slice(0, -1)+"corrently/topics", JSON.stringify(topics));
 }
 
 const attachBindings = function() {
@@ -255,6 +277,9 @@ const attachBindings = function() {
         console.log(shareable);
     })
     sortability();
+
+    $('#exportSettingsToCloud').off();
+    $('#exportSettingsToCloud').on('click',syncCloudTopics);
 }
 
 
@@ -453,19 +478,14 @@ $(document).ready(async function() {
                     console.log("Import Topic",topic);
                 }
                 if(key_type == 'edge') {
+                    console.log("Add Flow to Edge",value);
                     front.send("/corrently/edge/add-flow",JSON.stringify(value));
                 }
             } else {
-                if(key == 'app'){
-                    const profile = new Profile();
-                    await profile.set(value);
-                    window.localStorage.setItem("profile",JSON.stringify(value));
-                    window.localStorage.setItem("corrently_cloud_user",JSON.stringify({
-                        username:value.corrently_cloud_user.username,
-                        password:value.corrently_cloud_user.password
-                    }));
-                    window.localStorage.setItem("order",JSON.stringify(value.order));
-                    console.log("Import Profile",value);
+                if((key == 'profile')||(key == 'app')){
+                    for (const [envkey, envvalue] of Object.entries(value)) {
+                        window.localStorage.setItem(envkey,envvalue);
+                    }
                 }
                 if(key == 'topics') {
                     for(let i=0;i<value.length;i++) {
@@ -480,11 +500,15 @@ $(document).ready(async function() {
                         await connection.set(value[i]);
                     }
                 }
+                if(key == 'edge_flow') {
+                    console.log("Add Flow to Edge");
+                    front.send("/corrently/edge/add-flow",JSON.stringify(value));
+                }
             }
         }
 
         if(getUrlParameter('import')) {
-            location.href='./index.html';
+           // location.href='./index.html';
         } else {
             location.reload();
         }
@@ -761,27 +785,14 @@ $(document).ready(async function() {
 
   
     $('#btnShareCurrent').on('click',async function(e) {
-        let ntopics = [];
-        let nconnections = [];
-
-        for (const [key, value] of Object.entries(activeTopics)) {
-            ntopics.push(value.payload.bucketId);
+        const keys = Object.keys(window.localStorage);
+        let env = {};
+        for(let i=0;i<keys.length;i++) {
+            env[keys[i]] = window.localStorage.getItem(keys[i]);
         }
-        for (const [key, value] of Object.entries(activeConnections)) {
-            nconnections.push(value.payload.bucketId);
-        }
-        
-        profile = new Profile();
-   
-        profile.payload.corrently_cloud_user = p_data;
-        profile.payload.order = JSON.parse(window.localStorage.getItem("order"));
-
-        await profile.set();
 
         let shareable = {
-            topics:ntopics,
-            connections:nconnections,
-            app: profile.payload.bucketId
+            app: env
         };
         
 
@@ -791,21 +802,6 @@ $(document).ready(async function() {
         shareSettings(e);
         $('#exportSettings').modal('show')
         console.log(shareable);
-
-
-
-        const obj = window.localStorage;
-        let nobj = {};
-
-        for (const [key, value] of Object.entries(obj)) {
-            nobj[key] = JSON.parse(value);
-        }
-    
-        $('#exportTxt').val(JSON.stringify(nobj));
-        $('#exportTxt').show();
-        $('#gtpShareId').hide();
-        shareSettings(e);
-        $('#exportSettings').modal('show')
     })
     $('#revealPWD').on('click',function(e) {
         if($('#mqtt_password').attr('type') == 'password') {
@@ -835,7 +831,10 @@ $(document).ready(async function() {
     });
 
     initControler();
-    
+    front.socket.on('connect',function() { 
+        console.log("reconnected to middleware");
+        setTimeout(initControler,500);
+    });
 });
 if (typeof navigator.serviceWorker !== 'undefined') {
     navigator.serviceWorker.register('assets/js/sw.js')
