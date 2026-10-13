@@ -44,8 +44,11 @@ $ npm run start:dev
 ```
 Open `./views/` in browser.
 
-## Cloud Instance
-Open https://current.corrently.cloud/ in browser.
+## Hosted instance
+
+The former hosted instance at https://current.corrently.cloud/ is no longer available as a public Corrently Current service.
+
+To use Corrently Current, run it locally (`npm run start:dev` and open `./views/`) or deploy the `views/` web interface on your own HTTPS-enabled web server/PWA host.
 
 ## Maintainer / Imprint
 
